@@ -3,11 +3,11 @@ import { Text } from "react-native";
 import { Container } from "@/components/layout/Container";
 import { Screen } from "@/components/layout/Screen";
 
-export default function ShopScreen() {
+export default function FavoritesScreen() {
   return (
     <Screen>
       <Container className="justify-center">
-        <Text className="text-2xl font-semibold text-slate-900">Shop</Text>
+        <Text className="text-2xl font-semibold text-slate-900">Favorites</Text>
       </Container>
     </Screen>
   );
