@@ -1,2 +1,2 @@
 # Metiyu
-Metiyu - Online Store Mobile App – Figma
+Metiyu - Online Store Mobile App
