@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Design-system tokens (from Figma). Stored as space-separated RGB channels
+       so Tailwind's <alpha-value> opacity modifiers work, e.g. bg-overlay/65. */
+
+    /* Neutral */
+    --color-neutral-0: 253 253 253;   /* #FDFDFD */
+    --color-neutral-100: 217 217 217; /* #D9D9D9 */
+    --color-neutral-400: 116 117 119; /* #747577 */
+    --color-neutral-500: 83 85 87;    /* #535557 */
+    --color-neutral-600: 68 68 68;    /* #444444 */
+    --color-neutral-700: 56 56 56;    /* #383838 */
+    --color-neutral-800: 40 40 40;    /* #282828 */
+    --color-neutral-900: 34 34 34;    /* #222222 */
+    --color-neutral-950: 26 26 26;    /* #1A1A1A */
+
+    /* System */
+    --color-primary: 223 228 28;      /* #DFE41C */
+    --color-yellow: 246 145 10;       /* #F6910A */
+    --color-red: 237 94 92;           /* #ED5E5C */
+
+    /* Overlay — pure black, intended for use at 65%, e.g. bg-overlay/65 */
+    --color-overlay: 0 0 0;           /* #000000 */
+  }
+}
