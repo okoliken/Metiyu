@@ -13,7 +13,6 @@ type HeaderProps = {
   onBag?: () => void;
 };
 
-// Home screen header: logo title + circular action buttons, with a bottom hairline.
 export function Header({
   title = "Metiyu",
   onSearch,
@@ -26,13 +25,13 @@ export function Header({
 
       <View className="flex-row items-center gap-3">
         <IconButton accessibilityLabel="Search" onPress={onSearch}>
-          <SearchIcon color={colors.neutral[100]} />
+          <SearchIcon color={colors.neutral[0]} />
         </IconButton>
         <IconButton accessibilityLabel="Messages" onPress={onChat}>
-          <ChatIcon color={colors.neutral[100]} />
+          <ChatIcon color={colors.neutral[0]} />
         </IconButton>
         <IconButton accessibilityLabel="Bag" onPress={onBag}>
-          <BagIcon color={colors.neutral[100]} />
+          <BagIcon color={colors.neutral[0]} />
         </IconButton>
       </View>
     </View>
