@@ -1,4 +1,5 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
+import { router } from "expo-router";
 
 import { PopularProductCard } from "@/components/home/PopularProductCard";
 import { ProductCard } from "@/components/product/ProductCard";
@@ -125,7 +126,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   return (
     <Screen edges={["top"]}>
-      <Header />
+      <Header onSearch={() => router.push("/search")} />
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
