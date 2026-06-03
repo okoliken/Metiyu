@@ -5,6 +5,7 @@ import { PopularProductCard } from "@/components/home/PopularProductCard";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Header } from "@/components/layout/Header";
 import { Screen } from "@/components/layout/Screen";
+import { PRODUCTS } from "@/data/products";
 import { useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -86,44 +87,13 @@ const CATEGORIES = [
   },
 ];
 
-const PRODUCTS = [
-  {
-    id: "1",
-    name: "Striped Polo Shirt",
-    image: require("../../assets/images/products/tshirt1.png"),
-    rating: 4.8,
-    reviews: 412,
-    price: 42,
-  },
-  {
-    id: "2",
-    name: "Color Block V-Neck Tee",
-    image: require("../../assets/images/products/tshirt2.png"),
-    rating: 4.9,
-    reviews: 562,
-    price: 45,
-  },
-  {
-    id: "3",
-    name: "Classic Cotton T-Shirt",
-    image: require("../../assets/images/products/tshirt3.png"),
-    rating: 4.7,
-    reviews: 318,
-    price: 38,
-  },
-  {
-    id: "4",
-    name: "Graphic Street Tee",
-    image: require("../../assets/images/products/tshirt4.png"),
-    rating: 4.6,
-    reviews: 204,
-    price: 40,
-  },
-] as const;
-
 export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string>("T-Shirts");
   const insets = useSafeAreaInsets();
+
+  const filteredProducts = PRODUCTS.filter(
+    (product) => product.category === selectedCategory,
+  );
   return (
     <Screen edges={["top"]}>
       <Header onSearch={() => router.push("/search")} />
@@ -185,19 +155,27 @@ export default function HomeScreen() {
           </ScrollView>
         </View>
 
-        <View className="mt-6 flex-row flex-wrap justify-between gap-y-5">
-          {PRODUCTS.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              image={product.image}
-              rating={product.rating}
-              reviews={product.reviews}
-              price={product.price}
-            />
-          ))}
-        </View>
+        {filteredProducts.length > 0 ? (
+          <View className="mt-6 flex-row flex-wrap justify-between gap-y-5">
+            {filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                id={product.id}
+                name={product.name}
+                image={product.image}
+                rating={product.rating}
+                reviews={product.reviews}
+                price={product.price}
+              />
+            ))}
+          </View>
+        ) : (
+          <View className="mt-16 items-center">
+            <Text className="text-base text-neutral-400">
+              No {selectedCategory} yet
+            </Text>
+          </View>
+        )}
       </ScrollView>
     </Screen>
   );

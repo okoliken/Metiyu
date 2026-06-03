@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -8,48 +8,44 @@ import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/header/SearchIcon";
 import { IconButton } from "@/components/ui/IconButton";
 import { ProductCard } from "@/components/product/ProductCard";
+import { SortSheet } from "@/components/search/SortSheet";
 import { Screen } from "@/components/layout/Screen";
+import { PRODUCTS } from "@/data/products";
 import { colors } from "@/theme/colors";
 
-const RESULTS = [
-  {
-    id: "1",
-    name: "Striped Polo Shirt",
-    image: require("../assets/images/products/tshirt1.png"),
-    rating: 4.8,
-    reviews: 562,
-    price: 42,
-  },
-  {
-    id: "2",
-    name: "Color Block V-Neck Tee",
-    image: require("../assets/images/products/tshirt2.png"),
-    rating: 4.9,
-    reviews: 562,
-    price: 45,
-  },
-  {
-    id: "3",
-    name: "Essential Yellow Tee",
-    image: require("../assets/images/products/tshirt3.png"),
-    rating: 4.7,
-    reviews: 562,
-    price: 38,
-  },
-  {
-    id: "4",
-    name: "Graphic Casual T-Shirt",
-    image: require("../assets/images/products/tshirt4.png"),
-    rating: 4.8,
-    reviews: 562,
-    price: 40,
-  },
+const SORT_OPTIONS = [
+  "Newest",
+  "Trending",
+  "Price: Low to High",
+  "Price: High to Low",
+  "Best Rating",
 ] as const;
+
+type SortOption = (typeof SORT_OPTIONS)[number];
 
 export default function SearchScreen() {
   const { q } = useLocalSearchParams<{ q?: string }>();
   const [query, setQuery] = useState(q ?? "");
+  const [sort, setSort] = useState<SortOption>("Newest");
+  const [sortVisible, setSortVisible] = useState(false);
   const insets = useSafeAreaInsets();
+
+  const sortedResults = useMemo(() => {
+    const items = [...PRODUCTS];
+    switch (sort) {
+      case "Price: Low to High":
+        return items.sort((a, b) => a.price - b.price);
+      case "Price: High to Low":
+        return items.sort((a, b) => b.price - a.price);
+      case "Best Rating":
+        return items.sort((a, b) => b.rating - a.rating);
+      case "Trending":
+        return items.sort((a, b) => b.reviews - a.reviews);
+      case "Newest":
+      default:
+        return items; // original order
+    }
+  }, [sort]);
 
   return (
     <Screen edges={["top"]}>
@@ -67,6 +63,8 @@ export default function SearchScreen() {
             placeholder="Search products"
             placeholderTextColor={colors.neutral[400]}
             autoFocus
+            cursorColor={colors.primary}
+            selectionColor={colors.primary}
             returnKeyType="search"
             className="flex-1 text-base text-neutral-0"
           />
@@ -79,14 +77,17 @@ export default function SearchScreen() {
           Result for {query || ""}
         </Text>
         <Text className="text-sm font-medium text-neutral-400">
-          {RESULTS.length} Product
+          {sortedResults.length} Product
         </Text>
       </View>
 
       {/* Sort row */}
       <View className="border-y border-neutral-800 px-4 py-2">
-        <Pressable className="flex-row items-center gap-1 self-start active:opacity-70">
-          <Text className="text-base text-neutral-400">Sort by: Newest</Text>
+        <Pressable
+          onPress={() => setSortVisible(true)}
+          className="flex-row items-center gap-1 self-start active:opacity-70"
+        >
+          <Text className="text-base text-neutral-400">Sort by: {sort}</Text>
           <ChevronDownIcon color={colors.neutral[400]} />
         </Pressable>
       </View>
@@ -99,7 +100,7 @@ export default function SearchScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-row flex-wrap justify-between gap-y-5">
-          {RESULTS.map((product) => (
+          {sortedResults.map((product) => (
             <ProductCard
               key={product.id}
               id={product.id}
@@ -112,6 +113,17 @@ export default function SearchScreen() {
           ))}
         </View>
       </ScrollView>
+
+      <SortSheet
+        visible={sortVisible}
+        options={SORT_OPTIONS}
+        selected={sort}
+        onSelect={(option) => {
+          setSort(option as SortOption);
+          setSortVisible(false);
+        }}
+        onClose={() => setSortVisible(false)}
+      />
     </Screen>
   );
 }
