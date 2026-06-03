@@ -1,3 +1,4 @@
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { Tabs } from "expo-router";
 import { type ReactNode } from "react";
@@ -49,12 +50,20 @@ function TabBarIcon({
 
 function TabBarBackground() {
   return (
-    <LinearGradient
-      colors={["rgba(26, 26, 26, 0.8)", "rgba(54, 55, 6, 0.8)"]}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
+    <BlurView
+      intensity={40}
+      tint="dark"
+      experimentalBlurMethod="dimezisBlurView"
       style={StyleSheet.absoluteFill}
-    />
+    >
+      {/* Brand tint on top of the blur — lowered opacity so the blur reads through */}
+      <LinearGradient
+        colors={["rgba(26, 26, 26, 0.55)", "rgba(54, 55, 6, 0.55)"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+    </BlurView>
   );
 }
 
@@ -69,6 +78,10 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.neutral[400],
         tabBarBackground: TabBarBackground,
         tabBarStyle: {
+          position: "absolute",
+          left: 0,
+          right: 0,
+          bottom: 0,
           backgroundColor: "transparent",
           borderTopWidth: 1,
           borderTopColor: colors.neutral[700],

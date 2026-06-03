@@ -1,0 +1,38 @@
+diff --git a/node_modules/react-native-css-interop/dist/metro/index.js b/node_modules/react-native-css-interop/dist/metro/index.js
+index c91ba6a..c50b540 100644
+--- a/node_modules/react-native-css-interop/dist/metro/index.js
++++ b/node_modules/react-native-css-interop/dist/metro/index.js
+@@ -176,19 +176,21 @@ async function startCSSProcessor(filePath, platform, isDev, { input, getCSSForPl
+                 ? css
+                 : getNativeJS((0, css_to_rn_1.cssToReactNativeRuntime)(css, options), debug)));
+             debug(`virtualStyles.emit ${platform}`);
+-            haste.emit("change", {
+-                eventsQueue: [
+-                    {
+-                        filePath,
+-                        metadata: {
+-                            modifiedTime: Date.now(),
+-                            size: 1,
+-                            type: "virtual",
+-                        },
+-                        type: "change",
++            try {
++                haste.emit("change", {
++                    changes: {
++                        addedFiles: new Map(),
++                        modifiedFiles: new Map([
++                            [filePath, { modifiedTime: Date.now(), isSymlink: false }],
++                        ]),
++                        removedFiles: new Map(),
+                     },
+-                ],
+-            });
++                    rootDir: "",
++                });
++            }
++            catch (_error) {
++                // Metro file-map API may differ; avoid crashing the dev server.
++            }
+         }).then((css) => {
+             debug(`virtualStyles.initial ${platform}`);
+             return platform === "web"
