@@ -7,13 +7,25 @@ export type Product = {
   name: string;
   category: string;
   image: number;
+  /** Gallery angles for the detail screen. Falls back to [image] if omitted. */
+  images?: number[];
   rating: number;
   reviews: number;
   price: number;
+  description?: string;
 };
 
 export const PRODUCTS: Product[] = [
   // T-Shirts
+  {
+    id: "4",
+    name: "Graphic Street Tee",
+    category: "T-Shirts",
+    image: require("../../assets/images/products/tshirt4.png"),
+    rating: 4.6,
+    reviews: 204,
+    price: 40,
+  },
   {
     id: "1",
     name: "Striped Polo Shirt",
@@ -40,15 +52,6 @@ export const PRODUCTS: Product[] = [
     rating: 4.7,
     reviews: 318,
     price: 38,
-  },
-  {
-    id: "4",
-    name: "Graphic Street Tee",
-    category: "T-Shirts",
-    image: require("../../assets/images/products/tshirt4.png"),
-    rating: 4.6,
-    reviews: 204,
-    price: 40,
   },
   {
     id: "5",

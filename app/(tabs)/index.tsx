@@ -96,7 +96,10 @@ export default function HomeScreen() {
   );
   return (
     <Screen edges={["top"]}>
-      <Header onSearch={() => router.push("/search")} />
+      <Header
+        onSearch={() => router.push("/search")}
+        onChat={() => router.push("/chat")}
+      />
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
@@ -124,7 +127,7 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        <View className="mt-6 gap-2 flex-row">
+        <View className="mt-8 gap-2 flex-row">
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -135,10 +138,10 @@ export default function HomeScreen() {
               return (
                 <Pressable
                   onPress={() => setSelectedCategory(category.name)}
-                  className={`h-[31px] items-center justify-center rounded-[18px] px-3 py-2 ${
+                  className={`h-[31px] items-center justify-center rounded-[18px] border px-3 py-2 ${
                     isSelected
-                      ? "bg-primary"
-                      : "border border-neutral-700 bg-transparent"
+                      ? "border-primary bg-primary"
+                      : "border-neutral-700 bg-transparent"
                   }`}
                   key={category.id}
                 >
@@ -156,7 +159,7 @@ export default function HomeScreen() {
         </View>
 
         {filteredProducts.length > 0 ? (
-          <View className="mt-6 flex-row flex-wrap justify-between gap-y-5">
+          <View className="mt-3 flex-row flex-wrap justify-between gap-y-5">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.id}
