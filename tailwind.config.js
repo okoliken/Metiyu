@@ -14,6 +14,15 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      // Instrument Sans. Each weight is a separate font face, so the weight
+      // utility classes (font-medium/semibold/bold) map to the matching face;
+      // the matching fontWeight that Tailwind also applies avoids faux-bolding.
+      fontFamily: {
+        sans: ["InstrumentSans_400Regular"],
+        medium: ["InstrumentSans_500Medium"],
+        semibold: ["InstrumentSans_600SemiBold"],
+        bold: ["InstrumentSans_700Bold"],
+      },
       colors: {
         neutral: {
           0: token("--color-neutral-0"),

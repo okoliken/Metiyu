@@ -53,7 +53,7 @@ function TabBarBackground() {
     <BlurView
       intensity={40}
       tint="dark"
-      experimentalBlurMethod="dimezisBlurView"
+      blurMethod="dimezisBlurView"
       style={StyleSheet.absoluteFill}
     >
       {/* Brand tint on top of the blur — lowered opacity so the blur reads through */}
