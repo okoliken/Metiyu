@@ -67,7 +67,14 @@ export default function SearchScreen() {
             cursorColor={colors.primary}
             selectionColor={colors.primary}
             returnKeyType="search"
-            className="flex-1 text-base text-neutral-0"
+            className="flex-1 text-neutral-0"
+            // fontSize without text-base's lineHeight, which mis-centers text on iOS.
+            style={{
+              fontSize: 16,
+              padding: 0,
+              textAlignVertical: "center",
+              includeFontPadding: false,
+            }}
           />
         </View>
       </View>

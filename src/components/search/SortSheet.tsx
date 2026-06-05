@@ -50,7 +50,7 @@ export function SortSheet({
 
       {/* Floating panel — detached from the screen edges */}
       <View
-        className="absolute bottom-0 left-0 right-0 mx-3 rounded-[22px] bg-neutral-900 px-6 pt-1"
+        className="absolute bottom-0 left-0 right-0 mx-3 rounded-[22px] bg-neutral-900 px-6 pb-3 pt-1"
         style={{ marginBottom: insets.bottom + 12 }}
       >
         {/* Grab handle */}
