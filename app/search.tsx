@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, TextInput, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -73,12 +74,12 @@ export default function SearchScreen() {
 
       {/* Result count */}
       <View className="flex-row items-center justify-between px-4 pb-3">
-        <Text className="text-base font-medium text-neutral-0">
+        <AppText className="text-base font-medium text-neutral-0">
           Result for {query || ""}
-        </Text>
-        <Text className="text-sm font-medium text-neutral-400">
+        </AppText>
+        <AppText className="text-sm font-medium text-neutral-400">
           {sortedResults.length} Product
-        </Text>
+        </AppText>
       </View>
 
       {/* Sort row */}
@@ -87,7 +88,9 @@ export default function SearchScreen() {
           onPress={() => setSortVisible(true)}
           className="flex-row items-center gap-1 self-start active:opacity-70"
         >
-          <Text className="text-base text-neutral-400">Sort by: {sort}</Text>
+          <AppText className="text-base text-neutral-400">
+            Sort by: {sort}
+          </AppText>
           <ChevronDownIcon color={colors.neutral[400]} />
         </Pressable>
       </View>

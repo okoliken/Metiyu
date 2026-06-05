@@ -1,4 +1,5 @@
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { router } from "expo-router";
 
 import { PopularProductCard } from "@/components/home/PopularProductCard";
@@ -110,12 +111,12 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="flex-row items-center justify-between">
-          <Text className="text-lg text-neutral-0 font-semibold">
+          <AppText className="text-lg text-neutral-0 font-semibold">
             Popular Product
-          </Text>
-          <Text className="text-base font-semibold text-neutral-400">
+          </AppText>
+          <AppText className="text-base font-semibold text-neutral-400">
             See all
-          </Text>
+          </AppText>
         </View>
         <View className="mt-4 flex-row flex-wrap gap-3">
           {POPULAR_PRODUCTS.map((product) => (
@@ -145,13 +146,13 @@ export default function HomeScreen() {
                   }`}
                   key={category.id}
                 >
-                  <Text
+                  <AppText
                     className={`text-sm font-semibold ${
                       isSelected ? "text-neutral-950" : "text-neutral-400"
                     }`}
                   >
                     {category.name}
-                  </Text>
+                  </AppText>
                 </Pressable>
               );
             })}
@@ -174,9 +175,9 @@ export default function HomeScreen() {
           </View>
         ) : (
           <View className="mt-16 items-center">
-            <Text className="text-base text-neutral-400">
+            <AppText className="text-base text-neutral-400">
               No {selectedCategory} yet
-            </Text>
+            </AppText>
           </View>
         )}
       </ScrollView>

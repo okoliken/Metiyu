@@ -10,7 +10,11 @@ type RatingStarsProps = {
 };
 
 // Renders `count` stars: gold up to the rounded rating, grey for the rest.
-export function RatingStars({ rating, size = 14, count = 5 }: RatingStarsProps) {
+export function RatingStars({
+  rating,
+  size = 14,
+  count = 5,
+}: RatingStarsProps) {
   const filled = Math.round(rating);
 
   return (

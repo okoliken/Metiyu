@@ -1,8 +1,5 @@
 import { type ReactNode } from "react";
-import {
-  SafeAreaView,
-  type Edge,
-} from "react-native-safe-area-context";
+import { SafeAreaView, type Edge } from "react-native-safe-area-context";
 
 type ScreenProps = {
   children: ReactNode;
@@ -16,7 +13,10 @@ export function Screen({
   edges = ["top", "bottom"],
 }: ScreenProps) {
   return (
-    <SafeAreaView edges={edges} className={`flex-1 bg-neutral-950 ${className ?? ""}`}>
+    <SafeAreaView
+      edges={edges}
+      className={`flex-1 bg-neutral-950 ${className ?? ""}`}
+    >
       {children}
     </SafeAreaView>
   );

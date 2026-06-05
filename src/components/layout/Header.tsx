@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 
 import { BagIcon } from "@/components/icons/header/BagIcon";
 import { ChatIcon } from "@/components/icons/header/ChatIcon";
@@ -21,7 +22,9 @@ export function Header({
 }: HeaderProps) {
   return (
     <View className="flex-row items-center justify-between border-b border-neutral-700 px-4 py-3">
-      <Text className="text-[22px] font-semibold text-neutral-0">{title}</Text>
+      <AppText className="text-[22px] font-semibold text-neutral-0">
+        {title}
+      </AppText>
 
       <View className="flex-row items-center gap-3">
         <IconButton accessibilityLabel="Search" onPress={onSearch}>

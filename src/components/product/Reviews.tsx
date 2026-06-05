@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 
 import { ReviewItem } from "@/components/product/ReviewItem";
 import { type Review } from "@/data/reviews";
@@ -13,11 +14,11 @@ export function Reviews({ reviews, count, onSeeMore }: ReviewsProps) {
   return (
     <View>
       <View className="flex-row items-center justify-between">
-        <Text className="text-lg font-semibold text-neutral-0">
+        <AppText className="text-lg font-semibold text-neutral-0">
           Reviews ({count})
-        </Text>
+        </AppText>
         <Pressable hitSlop={8} onPress={onSeeMore}>
-          <Text className="text-base text-neutral-400">See More</Text>
+          <AppText className="text-base text-neutral-400">See More</AppText>
         </Pressable>
       </View>
 

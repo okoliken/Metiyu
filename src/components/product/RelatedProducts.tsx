@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 
 import { ProductCard } from "@/components/product/ProductCard";
 import { type Product } from "@/data/products";
@@ -17,7 +18,9 @@ export function RelatedProducts({
   return (
     <View>
       <View className="border-t border-neutral-800 pt-6">
-        <Text className="text-lg font-semibold text-neutral-0">{title}</Text>
+        <AppText className="text-lg font-semibold text-neutral-0">
+          {title}
+        </AppText>
       </View>
       <ScrollView
         horizontal

@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from "react-native";
+import { Pressable, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useState } from "react";
 
 import { AppImage } from "@/components/ui/AppImage";
@@ -31,38 +32,46 @@ export function ProductCard({
   const [favorite, setFavorite] = useState(false);
 
   return (
-    <Pressable className={widthClassName} onPress={() => router.push(`/product/${id}`)} disabled={disabled}>
+    <Pressable
+      className={widthClassName}
+      onPress={() => router.push(`/product/${id}`)}
+      disabled={disabled}
+    >
       <View className="aspect-[180/176] w-full overflow-hidden rounded-2xl bg-neutral-800">
         <AppImage source={image} className="size-full" contentFit="contain" />
         <Pressable
           onPress={() => setFavorite((prev) => !prev)}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel={favorite ? "Remove from favorites" : "Add to favorites"}
+          accessibilityLabel={
+            favorite ? "Remove from favorites" : "Add to favorites"
+          }
           className="absolute right-2 top-2 h-6 w-6 flex-row items-center justify-center rounded-full bg-neutral-600 active:opacity-80"
         >
           <HeartIcon filled={favorite} size={12} />
         </Pressable>
       </View>
 
-      <Text
+      <AppText
         className="mt-2.5 text-sm font-semibold text-neutral-0"
         numberOfLines={1}
       >
         {name}
-      </Text>
+      </AppText>
 
       <View className="mt-1 flex-row items-center gap-1">
         <StarIcon size={16} />
-        <Text className="text-xs font-semibold text-neutral-0">
+        <AppText className="text-xs font-semibold text-neutral-0">
           {rating.toFixed(1)}
-        </Text>
-        <Text className="text-xs text-neutral-400">({reviews} Reviews)</Text>
+        </AppText>
+        <AppText className="text-xs text-neutral-400">
+          ({reviews} Reviews)
+        </AppText>
       </View>
 
-      <Text className="mt-1 text-sm font-semibold text-neutral-0">
+      <AppText className="mt-1 text-sm font-semibold text-neutral-0">
         ${price}
-      </Text>
+      </AppText>
     </Pressable>
   );
 }

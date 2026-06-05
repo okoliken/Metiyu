@@ -7,7 +7,5 @@ type ContainerProps = {
 };
 
 export function Container({ children, className }: ContainerProps) {
-  return (
-    <View className={`flex-1 px-4 ${className ?? ""}`}>{children}</View>
-  );
+  return <View className={`flex-1 px-4 ${className ?? ""}`}>{children}</View>;
 }

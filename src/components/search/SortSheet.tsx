@@ -1,4 +1,5 @@
-import { Modal, Pressable, Text, View } from "react-native";
+import { Modal, Pressable, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@/theme/colors";
@@ -53,20 +54,20 @@ export function SortSheet({
         style={{ marginBottom: insets.bottom + 12 }}
       >
         {/* Grab handle */}
-        <View className="mb-4 h-1.5 w-[116px] self-center rounded-[9px] bg-neutral-950" />
+        <View className="mb-2 mt-2 h-1.5 w-[116px] self-center rounded-[9px] bg-neutral-950" />
 
-        <View className="flex-col">
+        <View className="flex-col py-1">
           {options.map((option) => {
             const active = option === selected;
             return (
               <Pressable
                 key={option}
                 onPress={() => onSelect(option)}
-                className="flex-row items-center justify-between py-3"
+                className="flex-row items-center justify-between py-2"
               >
-                <Text className="text-sm font-medium text-neutral-0">
+                <AppText className="text-sm font-medium text-neutral-0">
                   {option}
-                </Text>
+                </AppText>
                 <Radio active={active} />
               </Pressable>
             );

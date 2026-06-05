@@ -1,4 +1,5 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 
 import { RatingStars } from "@/components/product/RatingStars";
 import { AppImage } from "@/components/ui/AppImage";
@@ -32,9 +33,9 @@ function ReviewMedia({ media }: { media: number[] }) {
       ))}
       {overflow ? (
         <View className="h-10 w-10 items-center justify-center rounded-[10px] bg-neutral-400">
-          <Text className="text-base font-semibold text-neutral-0">
+          <AppText className="text-base font-semibold text-neutral-0">
             {media.length - 2}+
-          </Text>
+          </AppText>
         </View>
       ) : null}
     </View>
@@ -47,23 +48,23 @@ export function ReviewItem({ review }: { review: Review }) {
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-3">
           <View className="h-11 w-11 items-center justify-center rounded-full bg-neutral-700">
-            <Text className="text-sm font-semibold text-neutral-0">
+            <AppText className="text-sm font-semibold text-neutral-0">
               {initials(review.name)}
-            </Text>
+            </AppText>
           </View>
           <View className="gap-1">
-            <Text className="text-base font-semibold text-neutral-0">
+            <AppText className="text-base font-semibold text-neutral-0">
               {review.name}
-            </Text>
+            </AppText>
             <RatingStars rating={review.rating} size={14} />
           </View>
         </View>
-        <Text className="text-sm text-neutral-400">{review.time}</Text>
+        <AppText className="text-sm text-neutral-400">{review.time}</AppText>
       </View>
 
-      <Text className="mt-2 text-sm leading-5 text-neutral-400">
+      <AppText className="mt-2 text-sm leading-5 text-neutral-400">
         {review.comment}
-      </Text>
+      </AppText>
 
       {review.media?.length ? <ReviewMedia media={review.media} /> : null}
     </View>

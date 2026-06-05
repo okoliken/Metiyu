@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -41,11 +42,13 @@ export default function ProductDetailScreen() {
     return (
       <Screen edges={["top"]}>
         <View className="flex-1 items-center justify-center px-6">
-          <Text className="text-base text-neutral-400">Product not found.</Text>
+          <AppText className="text-base text-neutral-400">
+            Product not found.
+          </AppText>
           <Pressable onPress={() => router.back()} className="mt-4">
-            <Text className="text-base font-semibold text-primary">
+            <AppText className="text-base font-semibold text-primary">
               Go back
-            </Text>
+            </AppText>
           </Pressable>
         </View>
       </Screen>
@@ -79,9 +82,9 @@ export default function ProductDetailScreen() {
           pointerEvents="none"
           className="absolute inset-x-0 items-center justify-center"
         >
-          <Text className="text-xl font-semibold text-neutral-0 mb-2">
+          <AppText className="text-xl font-semibold text-neutral-0 mb-2">
             Detail Product
-          </Text>
+          </AppText>
         </View>
 
         <View className="flex-row items-center gap-3">
@@ -150,26 +153,28 @@ export default function ProductDetailScreen() {
         </View>
 
         {/* Title + rating + price */}
-        <Text className="mt-6 text-lg font-semibold text-neutral-0">
+        <AppText className="mt-6 text-lg font-semibold text-neutral-0">
           {product.name}
-        </Text>
+        </AppText>
 
         <View className="mt-2 flex-row items-center gap-1.5">
           <StarIcon size={18} />
-          <Text className="text-base font-semibold text-neutral-0">
+          <AppText className="text-base font-semibold text-neutral-0">
             {product.rating.toFixed(1)}
-          </Text>
-          <Text className="text-base text-neutral-400">
+          </AppText>
+          <AppText className="text-base text-neutral-400">
             ({product.reviews} Reviews)
-          </Text>
+          </AppText>
         </View>
 
-        <Text className="mt-3 text-lg font-bold text-neutral-0">
+        <AppText className="mt-3 text-lg font-bold text-neutral-0">
           ${product.price}
-        </Text>
+        </AppText>
 
         {/* Size selector */}
-        <Text className="mt-6 text-lg font-semibold text-neutral-0">Size</Text>
+        <AppText className="mt-6 text-lg font-semibold text-neutral-0">
+          Size
+        </AppText>
         <View className="mt-3 flex-row gap-1">
           {SIZES.map((option) => {
             const active = option === size;
@@ -181,30 +186,32 @@ export default function ProductDetailScreen() {
                   active ? "bg-primary" : "border border-neutral-700"
                 }`}
               >
-                <Text
+                <AppText
                   className={`text-base font-semibold ${
                     active ? "text-neutral-950" : "text-neutral-400"
                   }`}
                 >
                   {option}
-                </Text>
+                </AppText>
               </Pressable>
             );
           })}
         </View>
 
         {/* About */}
-        <Text className="mt-6 text-lg font-semibold text-neutral-0">About</Text>
-        <Text
+        <AppText className="mt-6 text-lg font-semibold text-neutral-0">
+          About
+        </AppText>
+        <AppText
           className="mt-2 text-sm leading-normal text-neutral-400"
           numberOfLines={expanded ? undefined : 3}
         >
           {description}
-        </Text>
+        </AppText>
         <Pressable onPress={() => setExpanded((prev) => !prev)} hitSlop={8}>
-          <Text className="mt-1 text-base font-semibold text-primary">
+          <AppText className="mt-1 text-base font-semibold text-primary">
             {expanded ? "Read Less" : "Read More"}
-          </Text>
+          </AppText>
         </Pressable>
 
         {/* Reviews */}
@@ -241,7 +248,9 @@ export default function ProductDetailScreen() {
           <BagIcon color={colors.neutral[0]} />
         </Pressable>
         <Pressable className="h-14 flex-1 items-center justify-center rounded-[18px] bg-primary active:opacity-90">
-          <Text className="text-base font-semibold text-neutral-950">Buy Now</Text>
+          <AppText className="text-base font-semibold text-neutral-950">
+            Buy Now
+          </AppText>
         </Pressable>
       </View>
     </Screen>

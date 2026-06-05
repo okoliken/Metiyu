@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -26,7 +27,12 @@ export default function ReviewsScreen() {
       REVIEWS.some((review) => review.rating === r),
     );
     return [
-      { key: "all", label: "All", count: REVIEWS.length, value: { type: "all" } as Filter },
+      {
+        key: "all",
+        label: "All",
+        count: REVIEWS.length,
+        value: { type: "all" } as Filter,
+      },
       {
         key: "media",
         label: "With Media",
@@ -65,7 +71,9 @@ export default function ReviewsScreen() {
         >
           <ArrowLeftIcon color={colors.neutral[0]} />
         </IconButton>
-        <Text className="text-xl font-semibold text-neutral-0">Reviews</Text>
+        <AppText className="text-xl font-semibold text-neutral-0">
+          Reviews
+        </AppText>
       </View>
 
       {/* Filter chips */}
@@ -74,7 +82,11 @@ export default function ReviewsScreen() {
         showsHorizontalScrollIndicator={false}
         // A horizontal ScrollView otherwise stretches to fill vertical space.
         style={{ flexGrow: 0 }}
-        contentContainerStyle={{ gap: 8, paddingHorizontal: 16, paddingVertical: 12 }}
+        contentContainerStyle={{
+          gap: 8,
+          paddingHorizontal: 16,
+          paddingVertical: 12,
+        }}
       >
         {filters.map((chip) => {
           const active = isActive(chip.value);
@@ -94,13 +106,13 @@ export default function ReviewsScreen() {
                   color={active ? colors.neutral[950] : colors.yellow}
                 />
               ) : null}
-              <Text
+              <AppText
                 className={`text-sm font-semibold ${
                   active ? "text-neutral-950" : "text-neutral-400"
                 }`}
               >
                 {chip.label} ({chip.count})
-              </Text>
+              </AppText>
             </Pressable>
           );
         })}

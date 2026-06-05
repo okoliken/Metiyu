@@ -2,7 +2,8 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import { Tabs } from "expo-router";
 import { type ReactNode } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { CategoryIcon } from "@/components/icons/tab/CategoryIcon";
@@ -19,7 +20,7 @@ function TabBarLabel({
   children: string;
 }) {
   return (
-    <Text
+    <AppText
       className={
         focused
           ? "mt-1 text-xs font-medium text-primary"
@@ -27,7 +28,7 @@ function TabBarLabel({
       }
     >
       {children}
-    </Text>
+    </AppText>
   );
 }
 

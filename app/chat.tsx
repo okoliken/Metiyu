@@ -5,10 +5,10 @@ import {
   Platform,
   Pressable,
   ScrollView,
-  Text,
   TextInput,
   View,
 } from "react-native";
+import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -29,7 +29,12 @@ type Message = {
 };
 
 const INITIAL_MESSAGES: Message[] = [
-  { id: "1", from: "me", text: "Hi, is this T-shirt still available?", time: "10:15 AM" },
+  {
+    id: "1",
+    from: "me",
+    text: "Hi, is this T-shirt still available?",
+    time: "10:15 AM",
+  },
   {
     id: "2",
     from: "them",
@@ -37,9 +42,24 @@ const INITIAL_MESSAGES: Message[] = [
     time: "10:15 AM",
   },
   { id: "3", from: "me", text: "Do you have size L?", time: "10:15 AM" },
-  { id: "4", from: "them", text: "Yes, size L is ready in stock 😊", time: "10:15 AM" },
-  { id: "5", from: "me", text: "Okay, I will place the order.", time: "10:15 AM" },
-  { id: "6", from: "them", text: "Great! I'll get that ready for you 😊", time: "10:15 AM" },
+  {
+    id: "4",
+    from: "them",
+    text: "Yes, size L is ready in stock 😊",
+    time: "10:15 AM",
+  },
+  {
+    id: "5",
+    from: "me",
+    text: "Okay, I will place the order.",
+    time: "10:15 AM",
+  },
+  {
+    id: "6",
+    from: "them",
+    text: "Great! I'll get that ready for you 😊",
+    time: "10:15 AM",
+  },
 ];
 
 function formatTime(date: Date) {
@@ -56,25 +76,24 @@ function MessageBubble({ message }: { message: Message }) {
         mine ? "self-end bg-primary" : "self-start bg-neutral-800"
       }`}
     >
-      <Text
+      <AppText
         className={`text-sm font-semibold leading-tight ${mine ? "text-neutral-950" : "text-neutral-0"}`}
       >
         {message.text}
-      </Text>
-      <Text
+      </AppText>
+      <AppText
         className={`mt-1 font-medium text-xs ${
           mine ? "self-end text-neutral-700" : "text-neutral-400"
         }`}
       >
         {message.time}
-      </Text>
+      </AppText>
     </View>
   );
 }
 
 function ProductBubble({ productId }: { productId?: string }) {
-  const product =
-    PRODUCTS.find((item) => item.id === productId) ?? PRODUCTS[1];
+  const product = PRODUCTS.find((item) => item.id === productId) ?? PRODUCTS[1];
 
   return (
     <View className="max-w-[85%] flex-row items-center gap-3 self-end rounded-2xl bg-neutral-800 p-3">
@@ -86,21 +105,24 @@ function ProductBubble({ productId }: { productId?: string }) {
         />
       </View>
       <View className="flex-1">
-        <Text className="text-xs font-semibold text-neutral-0" numberOfLines={1}>
+        <AppText
+          className="text-xs font-semibold text-neutral-0"
+          numberOfLines={1}
+        >
           {product.name}
-        </Text>
+        </AppText>
         <View className="mt-0.5 flex-row items-center gap-1">
           <StarIcon size={14} />
-          <Text className="text-xs font-semibold text-neutral-0">
+          <AppText className="text-xs font-semibold text-neutral-0">
             {product.rating.toFixed(1)}
-          </Text>
-          <Text className="text-xs text-neutral-400">
+          </AppText>
+          <AppText className="text-xs text-neutral-400">
             ({product.reviews} Reviews)
-          </Text>
+          </AppText>
         </View>
-        <Text className="mt-0.5 text-xs font-semibold text-neutral-0">
+        <AppText className="mt-0.5 text-xs font-semibold text-neutral-0">
           ${product.price}
-        </Text>
+        </AppText>
       </View>
     </View>
   );
@@ -119,10 +141,17 @@ export default function ChatScreen() {
     if (!text) return;
     setMessages((prev) => [
       ...prev,
-      { id: String(Date.now()), from: "me", text, time: formatTime(new Date()) },
+      {
+        id: String(Date.now()),
+        from: "me",
+        text,
+        time: formatTime(new Date()),
+      },
     ]);
     setDraft("");
-    requestAnimationFrame(() => scrollRef.current?.scrollToEnd({ animated: true }));
+    requestAnimationFrame(() =>
+      scrollRef.current?.scrollToEnd({ animated: true }),
+    );
   };
 
   return (
@@ -136,9 +165,9 @@ export default function ChatScreen() {
         >
           <ArrowLeftIcon color={colors.neutral[0]} />
         </IconButton>
-        <Text className="text-xl font-semibold text-neutral-0">
+        <AppText className="text-xl font-semibold text-neutral-0">
           Metiyu Customer Service
-        </Text>
+        </AppText>
       </View>
 
       <KeyboardAvoidingView
@@ -179,7 +208,12 @@ export default function ChatScreen() {
               returnKeyType="send"
               onSubmitEditing={send}
               className="flex-1 text-neutral-0"
-              style={{ fontSize: 14, padding: 0, textAlignVertical: "center", includeFontPadding: false }}
+              style={{
+                fontSize: 14,
+                padding: 0,
+                textAlignVertical: "center",
+                includeFontPadding: false,
+              }}
             />
           </View>
           <Pressable
