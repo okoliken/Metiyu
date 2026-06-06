@@ -1,7 +1,16 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, TextInput, View } from "react-native";
+import { type ReactNode, useMemo, useState } from "react";
+import { Pressable, TextInput, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
+import Animated, {
+  Easing,
+  useAnimatedReaction,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+  type SharedValue,
+} from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -24,12 +33,74 @@ const SORT_OPTIONS = [
 
 type SortOption = (typeof SORT_OPTIONS)[number];
 
+// How far past the viewport's bottom edge an item must travel before it reveals.
+const TRIGGER_INSET = 70;
+
+/**
+ * Fades + slides a grid item into place the first time it enters the viewport,
+ * then latches so it never replays. Scroll-position driven (no spring), so it
+ * stays smooth. Scoped to the search screen.
+ */
+function ScrollRevealItem({
+  scrollY,
+  viewportHeight,
+  children,
+}: {
+  scrollY: SharedValue<number>;
+  viewportHeight: number;
+  children: ReactNode;
+}) {
+  const offset = useSharedValue(-1); // -1 until measured
+  const progress = useSharedValue(0);
+  const triggered = useSharedValue(false);
+
+  useAnimatedReaction(
+    () => {
+      if (offset.value < 0 || !viewportHeight) return false;
+      // Item top relative to the viewport's top edge.
+      return offset.value - scrollY.value < viewportHeight - TRIGGER_INSET;
+    },
+    (inView) => {
+      if (inView && !triggered.value) {
+        triggered.value = true;
+        progress.value = withTiming(1, {
+          duration: 420,
+          easing: Easing.out(Easing.cubic),
+        });
+      }
+    },
+  );
+
+  const style = useAnimatedStyle(() => ({
+    opacity: progress.value,
+    transform: [{ translateY: (1 - progress.value) * 24 }],
+  }));
+
+  return (
+    <Animated.View
+      onLayout={(e) => {
+        offset.value = e.nativeEvent.layout.y;
+      }}
+      className="w-[48%]"
+      style={style}
+    >
+      {children}
+    </Animated.View>
+  );
+}
+
 export default function SearchScreen() {
   const { q } = useLocalSearchParams<{ q?: string }>();
   const [query, setQuery] = useState(q ?? "");
   const [sort, setSort] = useState<SortOption>("Newest");
   const [sortVisible, setSortVisible] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(0);
   const insets = useSafeAreaInsets();
+
+  const scrollY = useSharedValue(0);
+  const onScroll = useAnimatedScrollHandler((e) => {
+    scrollY.value = e.contentOffset.y;
+  });
 
   const sortedResults = useMemo(() => {
     const items = [...PRODUCTS];
@@ -102,7 +173,10 @@ export default function SearchScreen() {
         </Pressable>
       </View>
 
-      <ScrollView
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)}
         contentContainerStyle={{
           padding: 16,
           paddingBottom: insets.bottom + 16,
@@ -111,18 +185,24 @@ export default function SearchScreen() {
       >
         <View className="flex-row flex-wrap justify-between gap-y-5">
           {sortedResults.map((product) => (
-            <ProductCard
+            <ScrollRevealItem
               key={product.id}
-              id={product.id}
-              name={product.name}
-              image={product.image}
-              rating={product.rating}
-              reviews={product.reviews}
-              price={product.price}
-            />
+              scrollY={scrollY}
+              viewportHeight={viewportHeight}
+            >
+              <ProductCard
+                id={product.id}
+                name={product.name}
+                image={product.image}
+                rating={product.rating}
+                reviews={product.reviews}
+                price={product.price}
+                widthClassName="w-full"
+              />
+            </ScrollRevealItem>
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       <SortSheet
         visible={sortVisible}

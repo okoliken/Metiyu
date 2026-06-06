@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
+import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { router } from "expo-router";
 
 import { PopularProductCard } from "@/components/home/PopularProductCard";
@@ -162,15 +163,23 @@ export default function HomeScreen() {
         {filteredProducts.length > 0 ? (
           <View className="mt-3 flex-row flex-wrap justify-between gap-y-5">
             {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                name={product.name}
-                image={product.image}
-                rating={product.rating}
-                reviews={product.reviews}
-                price={product.price}
-              />
+              // Keyed by category so switching filters remounts the cards and
+              // replays the fade/slide-in. Same look as the search reveal.
+              <Animated.View
+                key={`${selectedCategory}-${product.id}`}
+                entering={FadeInDown.duration(420).easing(Easing.out(Easing.cubic))}
+                className="w-[48%]"
+              >
+                <ProductCard
+                  id={product.id}
+                  name={product.name}
+                  image={product.image}
+                  rating={product.rating}
+                  reviews={product.reviews}
+                  price={product.price}
+                  widthClassName="w-full"
+                />
+              </Animated.View>
             ))}
           </View>
         ) : (

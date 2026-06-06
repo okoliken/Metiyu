@@ -123,6 +123,15 @@ export default function TabLayout() {
             </TabBarIcon>
           ),
         }}
+        listeners={({ navigation }) => ({
+          // The category tab hosts a nested stack (list → detail). Without this,
+          // re-entering the tab restores its last screen (the detail). Always
+          // send a tab press back to the list.
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("category", { screen: "index" });
+          },
+        })}
       />
       <Tabs.Screen
         name="orders"
