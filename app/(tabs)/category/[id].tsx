@@ -1,7 +1,8 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
+import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
@@ -12,7 +13,7 @@ import { Screen } from "@/components/layout/Screen";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SortSheet } from "@/components/search/SortSheet";
 import { CATEGORIES } from "@/data/categories";
-import { PRODUCTS } from "@/data/products";
+import { PRODUCTS, type Product } from "@/data/products";
 import { colors } from "@/theme/colors";
 
 const SORT_OPTIONS = [
@@ -25,6 +26,23 @@ const SORT_OPTIONS = [
 
 type SortOption = (typeof SORT_OPTIONS)[number];
 
+function sortProducts(items: Product[], sort: SortOption): Product[] {
+  const sorted = [...items];
+  switch (sort) {
+    case "Price: Low to High":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "Price: High to Low":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "Best Rating":
+      return sorted.sort((a, b) => b.rating - a.rating);
+    case "Trending":
+      return sorted.sort((a, b) => b.reviews - a.reviews);
+    case "Newest":
+    default:
+      return sorted; // original order
+  }
+}
+
 export default function CategoryDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
@@ -34,23 +52,13 @@ export default function CategoryDetailScreen() {
 
   const category = CATEGORIES.find((item) => item.id === id);
 
-  const products = useMemo(() => {
-    if (!category) return [];
-    const items = PRODUCTS.filter((item) => item.category === category.name);
-    switch (sort) {
-      case "Price: Low to High":
-        return items.sort((a, b) => a.price - b.price);
-      case "Price: High to Low":
-        return items.sort((a, b) => b.price - a.price);
-      case "Best Rating":
-        return items.sort((a, b) => b.rating - a.rating);
-      case "Trending":
-        return items.sort((a, b) => b.reviews - a.reviews);
-      case "Newest":
-      default:
-        return items; // original order
-    }
-  }, [category, sort]);
+  // The React Compiler memoizes this derivation — no useMemo needed.
+  const products = category
+    ? sortProducts(
+        PRODUCTS.filter((item) => item.category === category.name),
+        sort,
+      )
+    : [];
 
   if (!category) {
     return (
@@ -122,15 +130,23 @@ export default function CategoryDetailScreen() {
         {/* Product grid */}
         <View className="flex-row flex-wrap justify-between gap-y-5 px-4 pt-4">
           {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              image={product.image}
-              rating={product.rating}
-              reviews={product.reviews}
-              price={product.price}
-            />
+            // Keyed by sort so re-sorting remounts the cards and replays the
+            // fade/slide-in. Same look as the home filter + search reveal.
+            <Animated.View
+              key={`${sort}-${product.id}`}
+              entering={FadeInDown.duration(420).easing(Easing.out(Easing.cubic))}
+              className="w-[48%]"
+            >
+              <ProductCard
+                id={product.id}
+                name={product.name}
+                image={product.image}
+                rating={product.rating}
+                reviews={product.reviews}
+                price={product.price}
+                widthClassName="w-full"
+              />
+            </Animated.View>
           ))}
         </View>
 

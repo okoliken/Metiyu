@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, View } from "react-native";
+import { FlatList, Pressable, ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { router } from "expo-router";
@@ -106,7 +106,6 @@ export default function HomeScreen() {
         className="flex-1"
         contentContainerStyle={{
           padding: 16,
-          // clear the absolute (blurred) tab bar: 61 height + safe-area inset
           paddingBottom: 61 + insets.bottom + 16,
         }}
         showsVerticalScrollIndicator={false}
@@ -119,15 +118,17 @@ export default function HomeScreen() {
             See all
           </AppText>
         </View>
-        <View className="mt-4 flex-row flex-wrap gap-3">
-          {POPULAR_PRODUCTS.map((product) => (
-            <PopularProductCard
-              key={product.id}
-              name={product.name}
-              image={product.image}
-            />
-          ))}
-        </View>
+        <FlatList
+          data={POPULAR_PRODUCTS}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          scrollEnabled={false}
+          columnWrapperStyle={{ justifyContent: "space-between" }}
+          contentContainerStyle={{ gap: 12, paddingTop: 16 }}
+          renderItem={({ item }) => (
+            <PopularProductCard name={item.name} image={item.image} />
+          )}
+        />
 
         <View className="mt-8 gap-2 flex-row">
           <ScrollView
@@ -148,7 +149,7 @@ export default function HomeScreen() {
                   key={category.id}
                 >
                   <AppText
-                    className={`text-sm font-semibold ${
+                    className={`text-sm text-center font-semibold ${
                       isSelected ? "text-neutral-950" : "text-neutral-400"
                     }`}
                   >

@@ -3,21 +3,18 @@ import { Stack } from "expo-router";
 import { stackAnimation } from "@/lib/navigation";
 import { colors } from "@/theme/colors";
 
-export default function CategoryStackLayout() {
+export default function OrdersStackLayout() {
   return (
     <Stack
       screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: colors.neutral[950] },
+        // Slide on iOS, fade on Android (see stackAnimation).
         animation: stackAnimation(),
       }}
     >
       <Stack.Screen name="index" />
-      {/* Detail rises from the bottom on iOS; still fades on Android. */}
-      <Stack.Screen
-        name="[id]"
-        options={{ animation: stackAnimation("slide_from_bottom") }}
-      />
+      <Stack.Screen name="[id]" />
     </Stack>
   );
 }

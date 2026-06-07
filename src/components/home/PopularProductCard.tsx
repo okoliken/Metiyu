@@ -6,11 +6,19 @@ import { AppImage } from "@/components/ui/AppImage";
 type PopularProductCardProps = {
   name: string;
   image: number;
+  /** Width utility — defaults to a 2-column grid; override for carousels. */
+  widthClassName?: string;
 };
 
-export function PopularProductCard({ name, image }: PopularProductCardProps) {
+export function PopularProductCard({
+  name,
+  image,
+  widthClassName = "w-[48%]",
+}: PopularProductCardProps) {
   return (
-    <View className="aspect-[2.5] w-[48%] overflow-hidden rounded-2xl bg-neutral-800">
+    <View
+      className={`aspect-[2.5] ${widthClassName} overflow-hidden rounded-2xl bg-neutral-800`}
+    >
       <View className="z-10 flex-1 justify-center pl-4 pr-[40%]">
         <AppText className="text-sm font-semibold leading-5 text-neutral-0">
           {name}

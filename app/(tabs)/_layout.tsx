@@ -54,7 +54,10 @@ function TabBarBackground() {
     <BlurView
       intensity={40}
       tint="dark"
-      blurMethod="dimezisBlurView"
+      // No `blurMethod`/`blurTarget`: iOS blurs natively, and Android shows the
+      // semi-transparent fallback (its dimezis blur needs a BlurTargetView ref
+      // wrapping the content — not practical for a tab-bar overlay). The
+      // gradient tint below carries the look on Android. Avoids the warning.
       style={StyleSheet.absoluteFill}
     >
       {/* Brand tint on top of the blur — lowered opacity so the blur reads through */}
@@ -136,7 +139,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="orders"
         options={{
-          title: "orders",
+          title: "Orders",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused}>
               <FavoritesIcon
@@ -145,6 +148,12 @@ export default function TabLayout() {
             </TabBarIcon>
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("orders", { screen: "index" });
+          },
+        })}
       />
       <Tabs.Screen
         name="profile"

@@ -12,6 +12,7 @@ import { BagIcon } from "@/components/icons/header/BagIcon";
 import { ChatIcon } from "@/components/icons/header/ChatIcon";
 import { Screen } from "@/components/layout/Screen";
 import { AppImage } from "@/components/ui/AppImage";
+import { Chips } from "@/components/ui/Chips";
 import { IconButton } from "@/components/ui/IconButton";
 import { Reviews } from "@/components/product/Reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
@@ -175,27 +176,14 @@ export default function ProductDetailScreen() {
         <AppText className="mt-6 text-lg font-semibold text-neutral-0">
           Size
         </AppText>
-        <View className="mt-3 flex-row gap-1">
-          {SIZES.map((option) => {
-            const active = option === size;
-            return (
-              <Pressable
-                key={option}
-                onPress={() => setSize(option)}
-                className={`min-w-12 h-[31px] items-center justify-center rounded-full px-3 ${
-                  active ? "bg-primary" : "border border-neutral-700"
-                }`}
-              >
-                <AppText
-                  className={`text-base font-semibold ${
-                    active ? "text-neutral-950" : "text-neutral-400"
-                  }`}
-                >
-                  {option}
-                </AppText>
-              </Pressable>
-            );
-          })}
+        <View className="mt-3">
+          <Chips
+            options={SIZES.map((s) => ({ key: s, label: s, value: s }))}
+            isActive={(s) => s === size}
+            onSelect={setSize}
+            scrollable={false}
+            size="sm"
+          />
         </View>
 
         {/* About */}

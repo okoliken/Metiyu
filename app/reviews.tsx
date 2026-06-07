@@ -1,12 +1,13 @@
 import { router } from "expo-router";
-import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { useState } from "react";
+import { ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
 import { StarIcon } from "@/components/icons/StarIcon";
 import { ReviewItem } from "@/components/product/ReviewItem";
+import { Chips } from "@/components/ui/Chips";
 import { Screen } from "@/components/layout/Screen";
 import { IconButton } from "@/components/ui/IconButton";
 import { REVIEWS } from "@/data/reviews";
@@ -17,43 +18,45 @@ type Filter =
   | { type: "media" }
   | { type: "rating"; rating: number };
 
+// Chip list with live counts. Derived from static data, so it's a constant.
+const REVIEW_FILTERS = (() => {
+  const ratings = [5, 4, 3, 2, 1].filter((r) =>
+    REVIEWS.some((review) => review.rating === r),
+  );
+  return [
+    {
+      key: "all",
+      label: "All",
+      count: REVIEWS.length,
+      value: { type: "all" } as Filter,
+    },
+    {
+      key: "media",
+      label: "With Media",
+      count: REVIEWS.filter((r) => r.media?.length).length,
+      value: { type: "media" } as Filter,
+    },
+    ...ratings.map((rating) => ({
+      key: `r${rating}`,
+      label: String(rating),
+      star: true,
+      count: REVIEWS.filter((r) => r.rating === rating).length,
+      value: { type: "rating", rating } as Filter,
+    })),
+  ];
+})();
+
 export default function ReviewsScreen() {
   const insets = useSafeAreaInsets();
   const [filter, setFilter] = useState<Filter>({ type: "all" });
 
-  // Build the chip list with live counts derived from the data.
-  const filters = useMemo(() => {
-    const ratings = [5, 4, 3, 2, 1].filter((r) =>
-      REVIEWS.some((review) => review.rating === r),
-    );
-    return [
-      {
-        key: "all",
-        label: "All",
-        count: REVIEWS.length,
-        value: { type: "all" } as Filter,
-      },
-      {
-        key: "media",
-        label: "With Media",
-        count: REVIEWS.filter((r) => r.media?.length).length,
-        value: { type: "media" } as Filter,
-      },
-      ...ratings.map((rating) => ({
-        key: `r${rating}`,
-        label: String(rating),
-        star: true,
-        count: REVIEWS.filter((r) => r.rating === rating).length,
-        value: { type: "rating", rating } as Filter,
-      })),
-    ];
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (filter.type === "all") return REVIEWS;
-    if (filter.type === "media") return REVIEWS.filter((r) => r.media?.length);
-    return REVIEWS.filter((r) => r.rating === filter.rating);
-  }, [filter]);
+  // The React Compiler memoizes this derivation — no useMemo needed.
+  const filtered =
+    filter.type === "all"
+      ? REVIEWS
+      : filter.type === "media"
+        ? REVIEWS.filter((r) => r.media?.length)
+        : REVIEWS.filter((r) => r.rating === filter.rating);
 
   const isActive = (value: Filter) =>
     value.type === filter.type &&
@@ -77,46 +80,24 @@ export default function ReviewsScreen() {
       </View>
 
       {/* Filter chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        // A horizontal ScrollView otherwise stretches to fill vertical space.
-        style={{ flexGrow: 0 }}
-        contentContainerStyle={{
-          gap: 8,
-          paddingHorizontal: 16,
-          paddingVertical: 12,
-        }}
-      >
-        {filters.map((chip) => {
-          const active = isActive(chip.value);
-          return (
-            <Pressable
-              key={chip.key}
-              onPress={() => setFilter(chip.value)}
-              className={`h-9 flex-row items-center justify-center gap-1.5 rounded-full border px-4 ${
-                active
-                  ? "border-primary bg-primary"
-                  : "border-neutral-700 bg-transparent"
-              }`}
-            >
-              {"star" in chip && chip.star ? (
-                <StarIcon
-                  size={14}
-                  color={active ? colors.neutral[950] : colors.yellow}
-                />
-              ) : null}
-              <AppText
-                className={`text-sm font-semibold ${
-                  active ? "text-neutral-950" : "text-neutral-400"
-                }`}
-              >
-                {chip.label} ({chip.count})
-              </AppText>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
+      <Chips
+        options={REVIEW_FILTERS.map((chip) => ({
+          key: chip.key,
+          label: `${chip.label} (${chip.count})`,
+          value: chip.value,
+          icon:
+            "star" in chip && chip.star
+              ? (active) => (
+                  <StarIcon
+                    size={14}
+                    color={active ? colors.neutral[950] : colors.yellow}
+                  />
+                )
+              : undefined,
+        }))}
+        isActive={isActive}
+        onSelect={setFilter}
+      />
 
       <ScrollView
         className="flex-1"

@@ -1,15 +1,18 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { type ReactNode, useMemo, useState } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import {
+  FlatList,
+  Pressable,
+  TextInput,
+  View,
+  type ViewToken,
+} from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import Animated, {
   Easing,
-  useAnimatedReaction,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  type SharedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -20,7 +23,7 @@ import { IconButton } from "@/components/ui/IconButton";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SortSheet } from "@/components/search/SortSheet";
 import { Screen } from "@/components/layout/Screen";
-import { PRODUCTS } from "@/data/products";
+import { PRODUCTS, type Product } from "@/data/products";
 import { colors } from "@/theme/colors";
 
 const SORT_OPTIONS = [
@@ -33,57 +36,62 @@ const SORT_OPTIONS = [
 
 type SortOption = (typeof SORT_OPTIONS)[number];
 
-// How far past the viewport's bottom edge an item must travel before it reveals.
-const TRIGGER_INSET = 70;
+function sortProducts(items: Product[], sort: SortOption): Product[] {
+  const sorted = [...items];
+  switch (sort) {
+    case "Price: Low to High":
+      return sorted.sort((a, b) => a.price - b.price);
+    case "Price: High to Low":
+      return sorted.sort((a, b) => b.price - a.price);
+    case "Best Rating":
+      return sorted.sort((a, b) => b.rating - a.rating);
+    case "Trending":
+      return sorted.sort((a, b) => b.reviews - a.reviews);
+    case "Newest":
+    default:
+      return sorted; // original order
+  }
+}
+
+// An item counts as "in view" once 30% of it is visible.
+const VIEWABILITY_CONFIG = { itemVisiblePercentThreshold: 30 };
+const COLUMN_WRAPPER = {
+  justifyContent: "space-between" as const,
+  marginBottom: 20,
+};
 
 /**
- * Fades + slides a grid item into place the first time it enters the viewport,
- * then latches so it never replays. Scroll-position driven (no spring), so it
- * stays smooth. Scoped to the search screen.
+ * Fades + slides a card into place the first time it enters the viewport
+ * (driven by the FlatList's onViewableItemsChanged). Latches via `revealed`,
+ * so cards remounted by virtualization re-appear instantly without replaying.
  */
 function ScrollRevealItem({
-  scrollY,
-  viewportHeight,
+  revealed,
   children,
 }: {
-  scrollY: SharedValue<number>;
-  viewportHeight: number;
+  revealed: boolean;
   children: ReactNode;
 }) {
-  const offset = useSharedValue(-1); // -1 until measured
-  const progress = useSharedValue(0);
-  const triggered = useSharedValue(false);
+  const progress = useSharedValue(revealed ? 1 : 0);
+  const hasAnimated = useRef(revealed);
 
-  useAnimatedReaction(
-    () => {
-      if (offset.value < 0 || !viewportHeight) return false;
-      // Item top relative to the viewport's top edge.
-      return offset.value - scrollY.value < viewportHeight - TRIGGER_INSET;
-    },
-    (inView) => {
-      if (inView && !triggered.value) {
-        triggered.value = true;
-        progress.value = withTiming(1, {
-          duration: 420,
-          easing: Easing.out(Easing.cubic),
-        });
-      }
-    },
-  );
+  useEffect(() => {
+    if (revealed && !hasAnimated.current) {
+      hasAnimated.current = true;
+      // .set()/.get() (not .value) so the React Compiler can track it.
+      progress.set(
+        withTiming(1, { duration: 420, easing: Easing.out(Easing.cubic) }),
+      );
+    }
+  }, [revealed, progress]);
 
   const style = useAnimatedStyle(() => ({
-    opacity: progress.value,
-    transform: [{ translateY: (1 - progress.value) * 24 }],
+    opacity: progress.get(),
+    transform: [{ translateY: (1 - progress.get()) * 24 }],
   }));
 
   return (
-    <Animated.View
-      onLayout={(e) => {
-        offset.value = e.nativeEvent.layout.y;
-      }}
-      className="w-[48%]"
-      style={style}
-    >
+    <Animated.View className="w-[48%]" style={style}>
       {children}
     </Animated.View>
   );
@@ -94,30 +102,29 @@ export default function SearchScreen() {
   const [query, setQuery] = useState(q ?? "");
   const [sort, setSort] = useState<SortOption>("Newest");
   const [sortVisible, setSortVisible] = useState(false);
-  const [viewportHeight, setViewportHeight] = useState(0);
+  const [revealedIds, setRevealedIds] = useState<Set<string>>(() => new Set());
   const insets = useSafeAreaInsets();
 
-  const scrollY = useSharedValue(0);
-  const onScroll = useAnimatedScrollHandler((e) => {
-    scrollY.value = e.contentOffset.y;
-  });
+  // Stable callback (FlatList requires the reference not to change).
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      setRevealedIds((prev) => {
+        let changed = false;
+        const next = new Set(prev);
+        for (const token of viewableItems) {
+          const id = (token.item as Product).id;
+          if (id && !next.has(id)) {
+            next.add(id);
+            changed = true;
+          }
+        }
+        return changed ? next : prev;
+      });
+    },
+  ).current;
 
-  const sortedResults = useMemo(() => {
-    const items = [...PRODUCTS];
-    switch (sort) {
-      case "Price: Low to High":
-        return items.sort((a, b) => a.price - b.price);
-      case "Price: High to Low":
-        return items.sort((a, b) => b.price - a.price);
-      case "Best Rating":
-        return items.sort((a, b) => b.rating - a.rating);
-      case "Trending":
-        return items.sort((a, b) => b.reviews - a.reviews);
-      case "Newest":
-      default:
-        return items; // original order
-    }
-  }, [sort]);
+  // The React Compiler memoizes this derivation — no useMemo needed.
+  const sortedResults = sortProducts(PRODUCTS, sort);
 
   return (
     <Screen edges={["top"]}>
@@ -173,36 +180,30 @@ export default function SearchScreen() {
         </Pressable>
       </View>
 
-      <Animated.ScrollView
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        onLayout={(e) => setViewportHeight(e.nativeEvent.layout.height)}
-        contentContainerStyle={{
-          padding: 16,
-          paddingBottom: insets.bottom + 16,
-        }}
+      <FlatList
+        data={sortedResults}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        columnWrapperStyle={COLUMN_WRAPPER}
+        contentContainerStyle={{ padding: 16, paddingBottom: insets.bottom + 16 }}
         showsVerticalScrollIndicator={false}
-      >
-        <View className="flex-row flex-wrap justify-between gap-y-5">
-          {sortedResults.map((product) => (
-            <ScrollRevealItem
-              key={product.id}
-              scrollY={scrollY}
-              viewportHeight={viewportHeight}
-            >
-              <ProductCard
-                id={product.id}
-                name={product.name}
-                image={product.image}
-                rating={product.rating}
-                reviews={product.reviews}
-                price={product.price}
-                widthClassName="w-full"
-              />
-            </ScrollRevealItem>
-          ))}
-        </View>
-      </Animated.ScrollView>
+        keyboardShouldPersistTaps="handled"
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={VIEWABILITY_CONFIG}
+        renderItem={({ item }) => (
+          <ScrollRevealItem revealed={revealedIds.has(item.id)}>
+            <ProductCard
+              id={item.id}
+              name={item.name}
+              image={item.image}
+              rating={item.rating}
+              reviews={item.reviews}
+              price={item.price}
+              widthClassName="w-full"
+            />
+          </ScrollRevealItem>
+        )}
+      />
 
       <SortSheet
         visible={sortVisible}

@@ -11,6 +11,7 @@
       "supportsTablet": true
     },
     "android": {
+      "backgroundColor": "#1A1A1A",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -21,6 +22,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "experiments": {
+      "reactCompiler": true
     },
     "plugins": [
       "expo-router",

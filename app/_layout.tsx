@@ -7,15 +7,28 @@ import {
   InstrumentSans_700Bold,
   useFonts,
 } from "@expo-google-fonts/instrument-sans";
-import { Stack } from "expo-router";
+import { DarkTheme, Stack, ThemeProvider } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { stackAnimation } from "@/lib/navigation";
 import { colors } from "@/theme/colors";
 
 SplashScreen.preventAutoHideAsync();
+
+// React Navigation's default theme is light, so its background/card colours
+// flash white behind transitions (notably back gestures on Android). Give the
+// navigators a dark theme that matches the app background.
+const navigationTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: colors.neutral[950],
+    card: colors.neutral[950],
+  },
+};
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -34,33 +47,25 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView className="flex-1 bg-neutral-950">
       <SafeAreaProvider>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            // Global app background — inherited by every screen.
-            contentStyle: { backgroundColor: colors.neutral[950] },
-          }}
-        >
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen
-            name="search"
-            options={{ animation: "slide_from_right" }}
-          />
-          <Stack.Screen
-            name="product/[id]"
-            options={{ animation: "slide_from_right" }}
-          />
-          <Stack.Screen
-            name="reviews"
-            options={{ animation: "slide_from_right" }}
-          />
-          <Stack.Screen
-            name="chat"
-            options={{ animation: "slide_from_right" }}
-          />
-        </Stack>
-        {/* App is dark, so use light status bar content */}
-        <StatusBar style="light" />
+        <ThemeProvider value={navigationTheme}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              // Global app background — inherited by every screen.
+              contentStyle: { backgroundColor: colors.neutral[950] },
+              // Slide on iOS, fade on Android (see stackAnimation).
+              animation: stackAnimation(),
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="search" />
+            <Stack.Screen name="product/[id]" />
+            <Stack.Screen name="reviews" />
+            <Stack.Screen name="chat" />
+          </Stack>
+          {/* App is dark, so use light status bar content */}
+          <StatusBar style="light" />
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
