@@ -65,7 +65,6 @@ export default function RootLayout() {
               <Stack.Screen name="orders/[id]" />
               <Stack.Screen name="reviews" />
               <Stack.Screen name="chat" />
-              <Stack.Screen name="ripple" />
               <Stack.Screen name="cart" />
             </Stack>
           </CartProvider>
