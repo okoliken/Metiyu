@@ -36,6 +36,8 @@ type CartContextValue = {
   toggle: (key: string) => void;
   toggleAll: () => void;
   clear: () => void;
+  /** Most recent add — drives the "Added to cart" toast. */
+  lastAdded: { name: string; at: number } | null;
 };
 
 export const CartContext = createContext<CartContextValue | null>(null);
@@ -51,6 +53,10 @@ export function useCart() {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [lastAdded, setLastAdded] = useState<{
+    name: string;
+    at: number;
+  } | null>(null);
 
   const add = (product: Product, size?: string) => {
     const key = keyFor(product, size);
@@ -63,6 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { key, product, size, qty: 1, selected: true }];
     });
+    setLastAdded({ name: product.name, at: Date.now() });
   }
 
   const setQty = (key: string, qty: number) => {
@@ -105,6 +112,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       toggle,
       toggleAll,
       clear,
+      lastAdded,
     };
 
 

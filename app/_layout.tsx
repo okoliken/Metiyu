@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { stackAnimation } from "@/lib/navigation";
 import { CartProvider } from "@/lib/cart";
+import { CartToast } from "@/components/cart/CartToast";
 import { colors } from "@/theme/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -67,6 +68,7 @@ export default function RootLayout() {
               <Stack.Screen name="chat" />
               <Stack.Screen name="cart" />
             </Stack>
+            <CartToast />
           </CartProvider>
           {/* App is dark, so use light status bar content */}
           <StatusBar style="light" />

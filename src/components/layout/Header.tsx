@@ -4,6 +4,7 @@ import { AppText } from "@/components/ui/AppText";
 import { BagIcon } from "@/components/icons/header/BagIcon";
 import { ChatIcon } from "@/components/icons/header/ChatIcon";
 import { SearchIcon } from "@/components/icons/header/SearchIcon";
+import { CartBadge } from "@/components/cart/CartBadge";
 import { IconButton } from "@/components/ui/IconButton";
 import { colors } from "@/theme/colors";
 
@@ -33,9 +34,12 @@ export function Header({
         <IconButton accessibilityLabel="Messages" onPress={onChat}>
           <ChatIcon color={colors.neutral[0]} />
         </IconButton>
-        <IconButton accessibilityLabel="Bag" onPress={onBag}>
-          <BagIcon color={colors.neutral[0]} />
-        </IconButton>
+        <View className="relative">
+          <IconButton accessibilityLabel="Bag" onPress={onBag}>
+            <BagIcon color={colors.neutral[0]} />
+          </IconButton>
+          <CartBadge />
+        </View>
       </View>
     </View>
   );

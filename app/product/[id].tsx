@@ -17,6 +17,7 @@ import { Reviews } from "@/components/product/Reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
 import { BuySheet } from "@/components/product/BuySheet";
 import { ProductGallery } from "@/components/product/ProductGallery";
+import { CartBadge } from "@/components/cart/CartBadge";
 import { PRODUCTS } from "@/data/products";
 import { REVIEWS } from "@/data/reviews";
 import { useCart } from "@/lib/cart";
@@ -90,12 +91,15 @@ export default function ProductDetailScreen() {
           <IconButton accessibilityLabel="Share">
             <ShareIcon color={colors.neutral[0]} />
           </IconButton>
-          <IconButton
-            accessibilityLabel="Cart"
-            onPress={() => router.push("/cart")}
-          >
-            <BagIcon color={colors.neutral[0]} />
-          </IconButton>
+          <View className="relative">
+            <IconButton
+              accessibilityLabel="Cart"
+              onPress={() => router.push("/cart")}
+            >
+              <BagIcon color={colors.neutral[0]} />
+            </IconButton>
+            <CartBadge />
+          </View>
         </View>
       </View>
 

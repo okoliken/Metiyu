@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Alert, ScrollView, View } from "react-native";
 import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import Animated, {
+  FadeIn,
   FadeOut,
   LinearTransition,
 } from "react-native-reanimated";
@@ -92,7 +93,7 @@ export default function CartScreen() {
 
             {/* Items */}
             <Animated.View
-              layout={LinearTransition.springify().damping(18)}
+              layout={LinearTransition.duration(220)}
               className="mt-5 rounded-3xl bg-neutral-900 p-4"
             >
               <PressableScale
@@ -106,8 +107,9 @@ export default function CartScreen() {
               {items.map((item, index) => (
                 <Animated.View
                   key={item.key}
-                  layout={LinearTransition.springify().damping(18)}
-                  exiting={FadeOut.duration(180)}
+                  entering={FadeIn.duration(220)}
+                  exiting={FadeOut.duration(220)}
+                  layout={LinearTransition.duration(220)}
                 >
                   {index === 0 ? (
                     <View className="mt-4" />
@@ -126,7 +128,7 @@ export default function CartScreen() {
 
             {/* Promo + summary */}
             <Animated.View
-              layout={LinearTransition.springify().damping(18)}
+              layout={LinearTransition.duration(220)}
               className="mt-5 rounded-3xl bg-neutral-900 p-4"
             >
               <View className="flex-row items-center justify-between rounded-2xl border border-neutral-700 px-4 py-3">

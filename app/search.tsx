@@ -119,7 +119,7 @@ export default function SearchScreen() {
   ).current;
 
   // The React Compiler memoizes this derivation — no useMemo needed.
-  const sortedResults = sortProducts(PRODUCTS, sort);
+  const sortedResults = sortProducts(PRODUCTS, sort).filter((product) => product.name.toLowerCase().includes(query.toLowerCase()));
 
   return (
     <Screen edges={["top"]}>
