@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
-  Pressable,
   ScrollView,
   TextInput,
   View,
@@ -18,6 +17,7 @@ import { StarIcon } from "@/components/icons/StarIcon";
 import { Screen } from "@/components/layout/Screen";
 import { AppImage } from "@/components/ui/AppImage";
 import { IconButton } from "@/components/ui/IconButton";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { PRODUCTS } from "@/data/products";
 import { colors } from "@/theme/colors";
 
@@ -195,9 +195,9 @@ export default function ChatScreen() {
           style={{ paddingBottom: insets.bottom }}
         >
           <View className="h-[37px] flex-1 flex-row items-center gap-2 rounded-2xl bg-neutral-800 px-4">
-            <Pressable hitSlop={8} accessibilityLabel="Attach file">
+            <PressableScale hitSlop={8} accessibilityLabel="Attach file">
               <PaperclipIcon color={colors.neutral[0]} />
-            </Pressable>
+            </PressableScale>
             <TextInput
               value={draft}
               onChangeText={setDraft}
@@ -216,13 +216,13 @@ export default function ChatScreen() {
               }}
             />
           </View>
-          <Pressable
+          <PressableScale
             onPress={send}
             accessibilityLabel="Send message"
             className="h-9 w-9 items-center justify-center rounded-xl bg-primary active:opacity-90 p-2.5"
           >
             <SendIcon color={colors.neutral[950]} size={15} />
-          </Pressable>
+          </PressableScale>
         </View>
       </KeyboardAvoidingView>
     </Screen>

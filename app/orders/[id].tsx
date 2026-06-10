@@ -1,12 +1,14 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { type ReactNode, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppText } from "@/components/ui/AppText";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
 import { CopyIcon } from "@/components/icons/CopyIcon";
+import { ReviewSheet } from "@/components/orders/ReviewSheet";
 import { AppImage } from "@/components/ui/AppImage";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { Screen } from "@/components/layout/Screen";
 import { ORDERS, orderTotal } from "@/data/orders";
 import { colors } from "@/theme/colors";
@@ -20,25 +22,25 @@ function Stepper({
 }) {
   return (
     <View className="flex-row items-center gap-3">
-      <Pressable
+      <PressableScale
         onPress={() => onChange(Math.max(1, value - 1))}
         hitSlop={6}
         accessibilityLabel="Decrease quantity"
         className="h-7 w-7 items-center justify-center rounded-lg bg-neutral-800 active:opacity-70"
       >
         <AppText className="text-lg leading-none text-neutral-400">−</AppText>
-      </Pressable>
+      </PressableScale>
       <AppText className="w-4 text-center text-base font-semibold text-neutral-0">
         {value}
       </AppText>
-      <Pressable
+      <PressableScale
         onPress={() => onChange(value + 1)}
         hitSlop={6}
         accessibilityLabel="Increase quantity"
         className="h-7 w-7 items-center justify-center rounded-lg bg-neutral-800 active:opacity-70"
       >
         <AppText className="text-base leading-none text-neutral-400">+</AppText>
-      </Pressable>
+      </PressableScale>
     </View>
   );
 }
@@ -74,6 +76,11 @@ export default function OrderDetailScreen() {
     () => order?.items.map((item) => item.quantity) ?? [],
   );
 
+  // Orders awaiting a review pop the review sheet open on top of the detail.
+  const [reviewOpen, setReviewOpen] = useState(
+    () => order?.status === "Give Review",
+  );
+
   if (!order) {
     return (
       <Screen edges={["top"]}>
@@ -81,11 +88,11 @@ export default function OrderDetailScreen() {
           <AppText className="text-base text-neutral-400">
             Order not found.
           </AppText>
-          <Pressable onPress={() => router.back()} className="mt-4">
+          <PressableScale onPress={() => router.back()} className="mt-4">
             <AppText className="text-base font-semibold text-primary">
               Go back
             </AppText>
-          </Pressable>
+          </PressableScale>
         </View>
       </Screen>
     );
@@ -99,14 +106,14 @@ export default function OrderDetailScreen() {
     <Screen edges={["top"]}>
       {/* Header */}
       <View className="h-12 flex-row items-center justify-center border-b border-neutral-800 px-4">
-        <Pressable
+        <PressableScale
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
           className="absolute left-4 h-10 w-10 items-center justify-center rounded-xl bg-neutral-800 active:bg-neutral-700"
         >
           <ArrowLeftIcon color={colors.neutral[0]} />
-        </Pressable>
+        </PressableScale>
         <AppText className="text-xl font-semibold text-neutral-0">
           Detail Order
         </AppText>
@@ -116,7 +123,8 @@ export default function OrderDetailScreen() {
         contentContainerStyle={{
           paddingHorizontal: 16,
           paddingTop: 16,
-          paddingBottom: 61 + insets.bottom + 16,
+          // Tab bar is hidden on this screen, so only clear the safe-area inset.
+          paddingBottom: insets.bottom + 16,
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -139,7 +147,7 @@ export default function OrderDetailScreen() {
           {order.items.map((item, index) => (
             <View key={`${item.product.id}-${index}`}>
               <View className="flex-row items-center gap-4">
-                <View className="h-16 w-16 overflow-hidden rounded-xl bg-neutral-800">
+                <View className="h-[72px] w-[58px] overflow-hidden">
                   <AppImage
                     source={item.product.image}
                     className="size-full"
@@ -187,9 +195,9 @@ export default function OrderDetailScreen() {
             <AppText className="text-base font-medium text-neutral-0">
               {order.transactionId}
             </AppText>
-            <Pressable hitSlop={8} accessibilityLabel="Copy transaction ID">
+            <PressableScale hitSlop={8} accessibilityLabel="Copy transaction ID">
               <CopyIcon color={colors.neutral[0]} />
-            </Pressable>
+            </PressableScale>
           </View>
         </DetailRow>
         <DetailRow label="Status">
@@ -205,6 +213,11 @@ export default function OrderDetailScreen() {
           </AppText>
         </DetailRow>
       </ScrollView>
+
+      <ReviewSheet
+        order={reviewOpen ? order : null}
+        onClose={() => setReviewOpen(false)}
+      />
     </Screen>
   );
 }

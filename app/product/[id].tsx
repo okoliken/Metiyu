@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -12,6 +12,7 @@ import { BagIcon } from "@/components/icons/header/BagIcon";
 import { ChatIcon } from "@/components/icons/header/ChatIcon";
 import { Screen } from "@/components/layout/Screen";
 import { AppImage } from "@/components/ui/AppImage";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { Chips } from "@/components/ui/Chips";
 import { IconButton } from "@/components/ui/IconButton";
 import { Reviews } from "@/components/product/Reviews";
@@ -46,11 +47,11 @@ export default function ProductDetailScreen() {
           <AppText className="text-base text-neutral-400">
             Product not found.
           </AppText>
-          <Pressable onPress={() => router.back()} className="mt-4">
+          <PressableScale onPress={() => router.back()} className="mt-4">
             <AppText className="text-base font-semibold text-primary">
               Go back
             </AppText>
-          </Pressable>
+          </PressableScale>
         </View>
       </Screen>
     );
@@ -116,7 +117,7 @@ export default function ProductDetailScreen() {
             />
           </View>
 
-          <Pressable
+          <PressableScale
             onPress={() => setFavorite((prev) => !prev)}
             hitSlop={8}
             accessibilityRole="button"
@@ -126,7 +127,7 @@ export default function ProductDetailScreen() {
             className="absolute right-4 top-4 h-10 w-10 items-center justify-center rounded-full bg-neutral-700 active:opacity-80"
           >
             <HeartIcon filled={favorite} size={20} />
-          </Pressable>
+          </PressableScale>
 
           {/* Thumbnails — only when there are multiple angles */}
           {gallery.length > 1 ? (
@@ -134,7 +135,7 @@ export default function ProductDetailScreen() {
               {gallery.map((image, index) => {
                 const active = index === selectedImage;
                 return (
-                  <Pressable
+                  <PressableScale
                     key={index}
                     onPress={() => setSelectedImage(index)}
                     className={`h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-neutral-950 ${
@@ -146,7 +147,7 @@ export default function ProductDetailScreen() {
                       className="size-full"
                       contentFit="contain"
                     />
-                  </Pressable>
+                  </PressableScale>
                 );
               })}
             </View>
@@ -196,11 +197,11 @@ export default function ProductDetailScreen() {
         >
           {description}
         </AppText>
-        <Pressable onPress={() => setExpanded((prev) => !prev)} hitSlop={8}>
+        <PressableScale onPress={() => setExpanded((prev) => !prev)} hitSlop={8}>
           <AppText className="mt-1 text-base font-semibold text-primary">
             {expanded ? "Read Less" : "Read More"}
           </AppText>
-        </Pressable>
+        </PressableScale>
 
         {/* Reviews */}
         <View className="mt-8">
@@ -222,24 +223,24 @@ export default function ProductDetailScreen() {
         className="absolute inset-x-0 bottom-0 flex-row items-center gap-3 border-t border-neutral-800 bg-neutral-950 px-4 pt-3"
         style={{ paddingBottom: insets.bottom + 12 }}
       >
-        <Pressable
+        <PressableScale
           accessibilityLabel="Message seller"
           onPress={() => router.push(`/chat?productId=${product.id}`)}
           className="h-14 w-14 items-center justify-center rounded-2xl border border-neutral-700 active:bg-neutral-800"
         >
           <ChatIcon color={colors.neutral[0]} />
-        </Pressable>
-        <Pressable
+        </PressableScale>
+        <PressableScale
           accessibilityLabel="Add to bag"
           className="h-14 w-14 items-center justify-center rounded-2xl border border-neutral-700 active:bg-neutral-800"
         >
           <BagIcon color={colors.neutral[0]} />
-        </Pressable>
-        <Pressable className="h-14 flex-1 items-center justify-center rounded-[18px] bg-primary active:opacity-90">
+        </PressableScale>
+        <PressableScale className="h-14 flex-1 items-center justify-center rounded-[18px] bg-primary active:opacity-90">
           <AppText className="text-base font-semibold text-neutral-950">
             Buy Now
           </AppText>
-        </Pressable>
+        </PressableScale>
       </View>
     </Screen>
   );

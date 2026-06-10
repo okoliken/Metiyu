@@ -1,6 +1,7 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 
+import { PressableScale } from "@/components/ui/PressableScale";
 import { ReviewItem } from "@/components/product/ReviewItem";
 import { type Review } from "@/data/reviews";
 
@@ -17,9 +18,9 @@ export function Reviews({ reviews, count, onSeeMore }: ReviewsProps) {
         <AppText className="text-lg font-semibold text-neutral-0">
           Reviews ({count})
         </AppText>
-        <Pressable hitSlop={8} onPress={onSeeMore}>
+        <PressableScale hitSlop={8} onPress={onSeeMore}>
           <AppText className="text-base text-neutral-400">See More</AppText>
-        </Pressable>
+        </PressableScale>
       </View>
 
       <View className="mt-4 gap-5">

@@ -1,8 +1,9 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 
 import { CATEGORY_CARD_HEIGHT, type Category } from "@/data/categories";
 import { AppImage } from "@/components/ui/AppImage";
 import { AppText } from "@/components/ui/AppText";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { router } from "expo-router";
 
 type CategoryCardProps = {
@@ -38,7 +39,7 @@ function getImagePosition(category: Category) {
 
 export function CategoryCard({ category }: CategoryCardProps) {
   return (
-    <Pressable
+    <PressableScale
       onPress={() => {
         router.push(`/category/${category.id}`);
       }}
@@ -77,6 +78,6 @@ export function CategoryCard({ category }: CategoryCardProps) {
           />
         </View>
       </View>
-    </Pressable>
+    </PressableScale>
   );
 }

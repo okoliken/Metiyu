@@ -1,8 +1,9 @@
-import { FlatList, Pressable, ScrollView, View } from "react-native";
+import { FlatList, ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { router } from "expo-router";
 
+import { PressableScale } from "@/components/ui/PressableScale";
 import { PopularProductCard } from "@/components/home/PopularProductCard";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Header } from "@/components/layout/Header";
@@ -139,7 +140,7 @@ export default function HomeScreen() {
             {CATEGORIES.map((category) => {
               const isSelected = selectedCategory === category.name;
               return (
-                <Pressable
+                <PressableScale
                   onPress={() => setSelectedCategory(category.name)}
                   className={`h-[31px] items-center justify-center rounded-[18px] border px-3 py-2 ${
                     isSelected
@@ -155,7 +156,7 @@ export default function HomeScreen() {
                   >
                     {category.name}
                   </AppText>
-                </Pressable>
+                </PressableScale>
               );
             })}
           </ScrollView>

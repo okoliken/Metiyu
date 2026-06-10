@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -10,6 +10,7 @@ import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { BagIcon } from "@/components/icons/header/BagIcon";
 import { CategoryHero } from "@/components/category/CategoryHero";
 import { Screen } from "@/components/layout/Screen";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SortSheet } from "@/components/search/SortSheet";
 import { CATEGORIES } from "@/data/categories";
@@ -67,11 +68,11 @@ export default function CategoryDetailScreen() {
           <AppText className="text-base text-neutral-400">
             Category not found.
           </AppText>
-          <Pressable onPress={() => router.back()} className="mt-4">
+          <PressableScale onPress={() => router.back()} className="mt-4">
             <AppText className="text-base font-semibold text-primary">
               Go back
             </AppText>
-          </Pressable>
+          </PressableScale>
         </View>
       </Screen>
     );
@@ -81,26 +82,26 @@ export default function CategoryDetailScreen() {
     <Screen edges={["top"]}>
       {/* Header */}
       <View className="h-12 flex-row items-center justify-between px-4">
-        <Pressable
+        <PressableScale
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
           className="h-10 w-10 items-center justify-center rounded-xl bg-neutral-800 active:bg-neutral-700"
         >
           <ArrowLeftIcon color={colors.neutral[0]} />
-        </Pressable>
+        </PressableScale>
 
         <AppText className="text-xl font-semibold text-neutral-0">
           Category
         </AppText>
 
-        <Pressable
+        <PressableScale
           accessibilityRole="button"
           accessibilityLabel="Bag"
           className="h-10 w-10 items-center justify-center rounded-xl bg-neutral-800 active:bg-neutral-700"
         >
           <BagIcon color={colors.neutral[0]} />
-        </Pressable>
+        </PressableScale>
       </View>
 
       <ScrollView
@@ -116,7 +117,7 @@ export default function CategoryDetailScreen() {
 
         {/* Sort row — sticks below the banner while scrolling */}
         <View className="border-y border-neutral-800 bg-neutral-950 px-4 py-3">
-          <Pressable
+          <PressableScale
             onPress={() => setSortVisible(true)}
             className="flex-row items-center gap-1 self-start active:opacity-70"
           >
@@ -124,7 +125,7 @@ export default function CategoryDetailScreen() {
               Sort by: {sort}
             </AppText>
             <ChevronDownIcon color={colors.neutral[400]} />
-          </Pressable>
+          </PressableScale>
         </View>
 
         {/* Product grid */}

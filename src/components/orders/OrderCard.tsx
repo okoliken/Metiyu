@@ -1,9 +1,10 @@
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { router } from "expo-router";
 
 import { StarIcon } from "@/components/icons/StarIcon";
 import { AppImage } from "@/components/ui/AppImage";
 import { AppText } from "@/components/ui/AppText";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { type Order } from "@/data/orders";
 
 export function OrderCard({ order }: { order: Order }) {
@@ -11,7 +12,7 @@ export function OrderCard({ order }: { order: Order }) {
   const extra = order.items.length - 1;
 
   return (
-    <Pressable
+    <PressableScale
       onPress={() => router.push(`/orders/${order.id}`)}
       className="flex-row items-center gap-3 rounded-2xl bg-neutral-900 p-3 active:opacity-80"
     >
@@ -48,6 +49,6 @@ export function OrderCard({ order }: { order: Order }) {
           ) : null}
         </View>
       </View>
-    </Pressable>
+    </PressableScale>
   );
 }

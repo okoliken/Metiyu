@@ -1,7 +1,8 @@
 import { type ReactNode } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 
 import { AppText } from "@/components/ui/AppText";
+import { PressableScale } from "@/components/ui/PressableScale";
 
 export type ChipOption<T> = {
   /** Stable React key. */
@@ -39,7 +40,7 @@ export function Chips<T>({
   const chips = options.map((option) => {
     const active = isActive(option.value);
     return (
-      <Pressable
+      <PressableScale
         key={option.key}
         onPress={() => onSelect(option.value)}
         className={`${pill} flex-row items-center justify-center gap-1.5 rounded-full border ${
@@ -54,7 +55,7 @@ export function Chips<T>({
         >
           {option.label}
         </AppText>
-      </Pressable>
+      </PressableScale>
     );
   });
 

@@ -1,7 +1,9 @@
-import { Modal, Pressable, View } from "react-native";
+import { BlurView } from "expo-blur";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { PressableScale } from "@/components/ui/PressableScale";
 import { colors } from "@/theme/colors";
 
 type SortSheetProps = {
@@ -45,8 +47,18 @@ export function SortSheet({
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      {/* Backdrop — tap to dismiss */}
-      <Pressable className="flex-1 bg-black/60 relative" onPress={onClose} />
+      {/* Backdrop — blurred dark scrim, tap to dismiss */}
+      <View style={StyleSheet.absoluteFill}>
+        <BlurView
+          intensity={25}
+          tint="dark"
+          style={StyleSheet.absoluteFill}
+        />
+        <Pressable
+          style={[StyleSheet.absoluteFill, { backgroundColor: "#000000A6" }]}
+          onPress={onClose}
+        />
+      </View>
 
       {/* Floating panel — detached from the screen edges */}
       <View
@@ -60,7 +72,7 @@ export function SortSheet({
           {options.map((option) => {
             const active = option === selected;
             return (
-              <Pressable
+              <PressableScale
                 key={option}
                 onPress={() => onSelect(option)}
                 className="flex-row items-center justify-between py-2"
@@ -69,7 +81,7 @@ export function SortSheet({
                   {option}
                 </AppText>
                 <Radio active={active} />
-              </Pressable>
+              </PressableScale>
             );
           })}
         </View>

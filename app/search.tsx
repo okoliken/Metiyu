@@ -1,12 +1,6 @@
 import { router, useLocalSearchParams } from "expo-router";
 import { type ReactNode, useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  TextInput,
-  View,
-  type ViewToken,
-} from "react-native";
+import { FlatList, TextInput, View, type ViewToken } from "react-native";
 import { AppText } from "@/components/ui/AppText";
 import Animated, {
   Easing,
@@ -20,6 +14,7 @@ import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
 import { ChevronDownIcon } from "@/components/icons/ChevronDownIcon";
 import { SearchIcon } from "@/components/icons/header/SearchIcon";
 import { IconButton } from "@/components/ui/IconButton";
+import { PressableScale } from "@/components/ui/PressableScale";
 import { ProductCard } from "@/components/product/ProductCard";
 import { SortSheet } from "@/components/search/SortSheet";
 import { Screen } from "@/components/layout/Screen";
@@ -169,7 +164,7 @@ export default function SearchScreen() {
 
       {/* Sort row */}
       <View className="border-y border-neutral-800 px-4 py-2">
-        <Pressable
+        <PressableScale
           onPress={() => setSortVisible(true)}
           className="flex-row items-center gap-1 self-start active:opacity-70"
         >
@@ -177,7 +172,7 @@ export default function SearchScreen() {
             Sort by: {sort}
           </AppText>
           <ChevronDownIcon color={colors.neutral[400]} />
-        </Pressable>
+        </PressableScale>
       </View>
 
       <FlatList
