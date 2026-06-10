@@ -14,6 +14,7 @@ import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { stackAnimation } from "@/lib/navigation";
+import { CartProvider } from "@/lib/cart";
 import { colors } from "@/theme/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -48,22 +49,26 @@ export default function RootLayout() {
     <GestureHandlerRootView className="flex-1 bg-neutral-950">
       <SafeAreaProvider>
         <ThemeProvider value={navigationTheme}>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              // Global app background — inherited by every screen.
-              contentStyle: { backgroundColor: colors.neutral[950] },
-              // Slide on iOS, fade on Android (see stackAnimation).
-              animation: stackAnimation(),
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="search" />
-            <Stack.Screen name="product/[id]" />
-            <Stack.Screen name="orders/[id]" />
-            <Stack.Screen name="reviews" />
-            <Stack.Screen name="chat" />
-          </Stack>
+          <CartProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                // Global app background — inherited by every screen.
+                contentStyle: { backgroundColor: colors.neutral[950] },
+                // Slide on iOS, fade on Android (see stackAnimation).
+                animation: stackAnimation(),
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="search" />
+              <Stack.Screen name="product/[id]" />
+              <Stack.Screen name="orders/[id]" />
+              <Stack.Screen name="reviews" />
+              <Stack.Screen name="chat" />
+              <Stack.Screen name="ripple" />
+              <Stack.Screen name="cart" />
+            </Stack>
+          </CartProvider>
           {/* App is dark, so use light status bar content */}
           <StatusBar style="light" />
         </ThemeProvider>

@@ -61,30 +61,6 @@ const CATEGORIES = [
     name: "Accessories",
   },
   {
-    id: "7",
-    name: "Jewelry",
-  },
-  {
-    id: "8",
-    name: "Watches",
-  },
-  {
-    id: "9",
-    name: "Sunglasses",
-  },
-  {
-    id: "10",
-    name: "Wallets",
-  },
-  {
-    id: "11",
-    name: "Hoodies",
-  },
-  {
-    id: "12",
-    name: "Sweaters",
-  },
-  {
     id: "13",
     name: "Jacket",
   },
@@ -102,6 +78,7 @@ export default function HomeScreen() {
       <Header
         onSearch={() => router.push("/search")}
         onChat={() => router.push("/chat")}
+        onBag={() => router.push("/cart")}
       />
       <ScrollView
         className="flex-1"

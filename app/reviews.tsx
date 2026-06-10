@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
+import Animated, { Easing, FadeInDown } from "react-native-reanimated";
 import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -63,6 +64,10 @@ export default function ReviewsScreen() {
     (value.type !== "rating" ||
       (filter.type === "rating" && value.rating === filter.rating));
 
+  // Changes whenever the filter changes, so the list remounts and replays the
+  // reveal animation when switching tabs.
+  const filterKey = filter.type === "rating" ? `r${filter.rating}` : filter.type;
+
   return (
     <Screen edges={["top"]}>
       {/* Header */}
@@ -109,8 +114,17 @@ export default function ReviewsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View className="gap-5 items-start">
-          {filtered.map((review) => (
-            <ReviewItem key={review.id} review={review} />
+          {filtered.map((review, index) => (
+            <Animated.View
+              // Keyed by filter so switching tabs replays the reveal.
+              key={`${filterKey}-${review.id}`}
+              entering={FadeInDown.duration(360)
+                .delay(index * 45)
+                .easing(Easing.out(Easing.cubic))}
+              className="w-full"
+            >
+              <ReviewItem review={review} />
+            </Animated.View>
           ))}
         </View>
       </ScrollView>

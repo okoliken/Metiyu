@@ -5,20 +5,21 @@ import { AppText } from "@/components/ui/AppText";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { ArrowLeftIcon } from "@/components/icons/ArrowLeftIcon";
-import { HeartIcon } from "@/components/icons/HeartIcon";
 import { ShareIcon } from "@/components/icons/ShareIcon";
 import { StarIcon } from "@/components/icons/StarIcon";
 import { BagIcon } from "@/components/icons/header/BagIcon";
 import { ChatIcon } from "@/components/icons/header/ChatIcon";
 import { Screen } from "@/components/layout/Screen";
-import { AppImage } from "@/components/ui/AppImage";
 import { PressableScale } from "@/components/ui/PressableScale";
 import { Chips } from "@/components/ui/Chips";
 import { IconButton } from "@/components/ui/IconButton";
 import { Reviews } from "@/components/product/Reviews";
 import { RelatedProducts } from "@/components/product/RelatedProducts";
+import { BuySheet } from "@/components/product/BuySheet";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { PRODUCTS } from "@/data/products";
 import { REVIEWS } from "@/data/reviews";
+import { useCart } from "@/lib/cart";
 import { colors } from "@/theme/colors";
 
 const SIZES = ["S", "M", "L", "XL", "XXL"] as const;
@@ -32,13 +33,14 @@ const DEFAULT_DESCRIPTION =
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const insets = useSafeAreaInsets();
+  const cart = useCart();
 
   const product = PRODUCTS.find((item) => item.id === id);
 
   const [favorite, setFavorite] = useState(false);
   const [size, setSize] = useState<(typeof SIZES)[number]>("S");
-  const [selectedImage, setSelectedImage] = useState(0);
   const [expanded, setExpanded] = useState(false);
+  const [buyOpen, setBuyOpen] = useState(false);
 
   if (!product) {
     return (
@@ -57,11 +59,6 @@ export default function ProductDetailScreen() {
     );
   }
 
-  // Real angle images when available; otherwise repeat the single image so the
-  // thumbnail strip still shows four selectable slots.
-  const gallery = product.images?.length
-    ? product.images
-    : [product.image, product.image, product.image, product.image];
   const description = product.description ?? DEFAULT_DESCRIPTION;
 
   // Suggest products from the same category (fall back to any others).
@@ -93,7 +90,10 @@ export default function ProductDetailScreen() {
           <IconButton accessibilityLabel="Share">
             <ShareIcon color={colors.neutral[0]} />
           </IconButton>
-          <IconButton accessibilityLabel="Bag">
+          <IconButton
+            accessibilityLabel="Cart"
+            onPress={() => router.push("/cart")}
+          >
             <BagIcon color={colors.neutral[0]} />
           </IconButton>
         </View>
@@ -108,51 +108,11 @@ export default function ProductDetailScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Image card */}
-        <View className="overflow-hidden rounded-3xl bg-neutral-800 p-4">
-          <View className="aspect-[1.15] w-full">
-            <AppImage
-              source={gallery[selectedImage]}
-              className="size-full"
-              contentFit="contain"
-            />
-          </View>
-
-          <PressableScale
-            onPress={() => setFavorite((prev) => !prev)}
-            hitSlop={8}
-            accessibilityRole="button"
-            accessibilityLabel={
-              favorite ? "Remove from favorites" : "Add to favorites"
-            }
-            className="absolute right-4 top-4 h-10 w-10 items-center justify-center rounded-full bg-neutral-700 active:opacity-80"
-          >
-            <HeartIcon filled={favorite} size={20} />
-          </PressableScale>
-
-          {/* Thumbnails — only when there are multiple angles */}
-          {gallery.length > 1 ? (
-            <View className="-mt-2 flex-row gap-3">
-              {gallery.map((image, index) => {
-                const active = index === selectedImage;
-                return (
-                  <PressableScale
-                    key={index}
-                    onPress={() => setSelectedImage(index)}
-                    className={`h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-neutral-950 ${
-                      active ? "border-2 border-primary" : ""
-                    }`}
-                  >
-                    <AppImage
-                      source={image}
-                      className="size-full"
-                      contentFit="contain"
-                    />
-                  </PressableScale>
-                );
-              })}
-            </View>
-          ) : null}
-        </View>
+        <ProductGallery
+          product={product}
+          favorite={favorite}
+          onToggleFavorite={() => setFavorite((prev) => !prev)}
+        />
 
         {/* Title + rating + price */}
         <AppText className="mt-6 text-lg font-semibold text-neutral-0">
@@ -232,16 +192,27 @@ export default function ProductDetailScreen() {
         </PressableScale>
         <PressableScale
           accessibilityLabel="Add to bag"
+          onPress={() => cart.add(product, size)}
           className="h-14 w-14 items-center justify-center rounded-2xl border border-neutral-700 active:bg-neutral-800"
         >
           <BagIcon color={colors.neutral[0]} />
         </PressableScale>
-        <PressableScale className="h-14 flex-1 items-center justify-center rounded-[18px] bg-primary active:opacity-90">
+        <PressableScale
+          onPress={() => setBuyOpen(true)}
+          className="h-14 flex-1 items-center justify-center rounded-[18px] bg-primary active:opacity-90"
+        >
           <AppText className="text-base font-semibold text-neutral-950">
             Buy Now
           </AppText>
         </PressableScale>
       </View>
+
+      <BuySheet
+        product={buyOpen ? product : null}
+        initialSize={size}
+        onClose={() => setBuyOpen(false)}
+        onAddToCart={({ product, size }) => cart.add(product, size)}
+      />
     </Screen>
   );
 }

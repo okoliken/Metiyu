@@ -13,13 +13,15 @@ export type Product = {
   reviews: number;
   price: number;
   description?: string;
+  /** Units in stock, shown in the Buy sheet. Falls back to a default if omitted. */
+  stock?: number;
 };
 
 export const PRODUCTS: Product[] = [
   // T-Shirts
   {
     id: "4",
-    name: "Graphic Street Tee",
+    name: "Striped Polo Shirt",
     category: "T-Shirts",
     image: require("../../assets/images/products/tshirt4.png"),
     rating: 4.6,
@@ -28,7 +30,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "1",
-    name: "Striped Polo Shirt",
+    name: "Color Block V-Neck Tee",
     category: "T-Shirts",
     image: require("../../assets/images/products/tshirt1.png"),
     rating: 4.8,
@@ -37,7 +39,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: "2",
-    name: "Color Block V-Neck Tee",
+    name: "Classic Cotton T-Shirt",
     category: "T-Shirts",
     image: require("../../assets/images/products/tshirt2.png"),
     rating: 4.9,
@@ -98,6 +100,15 @@ export const PRODUCTS: Product[] = [
     rating: 4.6,
     reviews: 189,
     price: 32,
+  },
+  {
+    id: "18",
+    name: "Teal Swim Shorts",
+    category: "Shorts",
+    image: require("../../assets/images/products/shorts3.png"),
+    rating: 4.8,
+    reviews: 134,
+    price: 30,
   },
   // Hats
   {

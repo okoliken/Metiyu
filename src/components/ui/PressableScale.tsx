@@ -20,7 +20,7 @@ type PressableScaleProps = ComponentProps<typeof Pressable> & {
  * just like the rest of the app's animated views.
  */
 export function PressableScale({
-  scale = 0.96,
+  scale = 0.99,
   onPressIn,
   onPressOut,
   style,

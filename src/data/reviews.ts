@@ -1,6 +1,8 @@
 export type Review = {
   id: string;
   name: string;
+  /** Reviewer avatar (remote URL). Falls back to initials when omitted. */
+  avatar?: string;
   rating: number;
   time: string;
   comment: string;
@@ -13,6 +15,7 @@ export const REVIEWS: Review[] = [
   {
     id: "1",
     name: "Sarah Jenkins",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
     rating: 5,
     time: "2 hours ago",
     comment:
@@ -21,6 +24,7 @@ export const REVIEWS: Review[] = [
   {
     id: "2",
     name: "Michael Tan",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 4,
     time: "Yesterday",
     comment:
@@ -29,6 +33,7 @@ export const REVIEWS: Review[] = [
   {
     id: "3",
     name: "Dave Wijaya",
+    avatar: "https://randomuser.me/api/portraits/men/45.jpg",
     rating: 5,
     time: "3 days ago",
     comment:
@@ -37,6 +42,7 @@ export const REVIEWS: Review[] = [
   {
     id: "4",
     name: "Jessica Lee",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
     time: "1 week ago",
     comment:
@@ -45,6 +51,7 @@ export const REVIEWS: Review[] = [
   {
     id: "5",
     name: "Michael Chen",
+    avatar: "https://randomuser.me/api/portraits/men/52.jpg",
     rating: 4,
     time: "5 days ago",
     comment:
@@ -58,6 +65,7 @@ export const REVIEWS: Review[] = [
   {
     id: "6",
     name: "Alex Thorne",
+    avatar: "https://randomuser.me/api/portraits/men/76.jpg",
     rating: 4,
     time: "1 week ago",
     comment:
@@ -66,6 +74,7 @@ export const REVIEWS: Review[] = [
   {
     id: "7",
     name: "John Martinez",
+    avatar: "https://randomuser.me/api/portraits/men/64.jpg",
     rating: 4,
     time: "1 week ago",
     comment:
@@ -75,6 +84,7 @@ export const REVIEWS: Review[] = [
   {
     id: "8",
     name: "Sarah Jenkins",
+    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
     rating: 5,
     time: "2 weeks ago",
     comment:

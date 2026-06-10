@@ -47,11 +47,19 @@ export function ReviewItem({ review }: { review: Review }) {
     <View>
       <View className="flex-row items-center justify-between">
         <View className="flex-row items-center gap-3">
-          <View className="h-11 w-11 items-center justify-center rounded-full bg-neutral-700">
-            <AppText className="text-sm font-semibold text-neutral-0">
-              {initials(review.name)}
-            </AppText>
-          </View>
+          {review.avatar ? (
+            <AppImage
+              source={{ uri: review.avatar }}
+              className="h-11 w-11 rounded-full bg-neutral-700"
+              contentFit="cover"
+            />
+          ) : (
+            <View className="h-11 w-11 items-center justify-center rounded-full bg-neutral-700">
+              <AppText className="text-sm font-semibold text-neutral-0">
+                {initials(review.name)}
+              </AppText>
+            </View>
+          )}
           <View className="gap-1">
             <AppText className="text-base font-semibold text-neutral-0">
               {review.name}
