@@ -99,22 +99,28 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = () => setItems([]);
 
+  // Totals only count checked items; an empty selection costs nothing (no delivery fee).
+  const subtotal = items
+    .filter((i) => i.selected)
+    .reduce((sum, i) => sum + i.product.price * i.qty, 0);
+  const discount = subtotal * DISCOUNT_RATE;
+  const total = subtotal > 0 ? subtotal - discount + DELIVERY_FEE : 0;
+
   const value = {
     items,
     count: items.reduce((sum, i) => sum + i.qty, 0),
     allSelected: items.length > 0 && items.every((i) => i.selected),
-    subtotal: items.filter((i) => i.selected).reduce((sum, i) => sum + i.product.price * i.qty, 0),
-    discount: items.filter((i) => i.selected).reduce((sum, i) => sum + i.product.price * i.qty, 0) * DISCOUNT_RATE,
-    total: items.filter((i) => i.selected).reduce((sum, i) => sum + i.product.price * i.qty, 0) > 0 ? items.filter((i) => i.selected).reduce((sum, i) => sum + i.product.price * i.qty, 0) - items.filter((i) => i.selected).reduce((sum, i) => sum + i.product.price * i.qty, 0) * DISCOUNT_RATE + DELIVERY_FEE : 0,
+    subtotal,
+    discount,
+    total,
     add,
-      setQty,
-      remove,
-      toggle,
-      toggleAll,
-      clear,
-      lastAdded,
-    };
-
+    setQty,
+    remove,
+    toggle,
+    toggleAll,
+    clear,
+    lastAdded,
+  };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
