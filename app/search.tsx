@@ -80,13 +80,13 @@ function ScrollRevealItem({
     }
   }, [revealed, progress]);
 
-  const style = useAnimatedStyle(() => ({
+  const scrollRevealStyle = useAnimatedStyle(() => ({
     opacity: progress.get(),
     transform: [{ translateY: (1 - progress.get()) * 24 }],
   }));
 
   return (
-    <Animated.View className="w-[48%]" style={style}>
+    <Animated.View className="w-[48%]" style={scrollRevealStyle}>
       {children}
     </Animated.View>
   );
